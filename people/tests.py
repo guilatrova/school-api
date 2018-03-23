@@ -47,3 +47,12 @@ class StudentApiIntegrationTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(models.Student.objects.count(), 1)
+
+    def test_lists_students(self):
+        models.Student.objects.create(name='Jhon Doe')
+        url = reverse('students')
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
