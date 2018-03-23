@@ -2,7 +2,8 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.test import TestCase
 from django.urls import reverse, resolve
-from people import views, serializers, models
+from people import views, serializers
+from people.models import Student
 
 class StudentUrlsTestCase(TestCase):
     def test_resolves_students_list_url(self):
@@ -39,20 +40,23 @@ class StudentSerializerTestCase(TestCase):
         self.assertTrue(serializer.is_valid())
 
 class StudentApiIntegrationTestCase(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Student.objects.create(name='Jhon Doe')
+
+    def setUp(self):
+        self.list_url = url = reverse('students')
+
     def test_creates_student(self):
         data = { 'name': 'Jhon Doe' }
-        url = reverse('students')
 
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(self.list_url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(models.Student.objects.count(), 1)
+        self.assertEqual(Student.objects.count(), 2)
 
     def test_lists_students(self):
-        models.Student.objects.create(name='Jhon Doe')
-        url = reverse('students')
-
-        response = self.client.get(url, format='json')
+        response = self.client.get(self.list_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
