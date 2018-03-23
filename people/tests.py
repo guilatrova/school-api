@@ -25,7 +25,7 @@ class PeopleUrl(TestCase):
 
     def test_students_single_url_allows(self):
         resolver = resolve_by_name('student', id=1)
-        allowed = ['get', 'put', 'post', 'delete']
+        allowed = ['get', 'put', 'delete']
 
         self.assertEqual(len(allowed), len(resolver.func.actions))
         for action in allowed:
