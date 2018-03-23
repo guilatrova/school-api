@@ -15,4 +15,10 @@ class PeopleUrl(TestCase):
         resolver = resolve_by_name('student', id=1)
         self.assertEqual(resolver.func.cls, views.StudentViewSet)
 
-    
+    def test_students_list_url_allows(self):
+        resolver = resolve_by_name('students')
+        allowed = ['get', 'post']
+        
+        self.assertEqual(len(allowed), len(resolver.func.actions))
+        for action in allowed:
+            self.assertIn(action, resolver.func.actions)
