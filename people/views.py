@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import viewsets
 
-class StudentViewSet:
+class StudentViewSet(viewsets.ModelViewSet):
     pass
