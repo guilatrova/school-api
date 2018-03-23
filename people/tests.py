@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
-from people import views
+from people import views, serializers
 
-class PeopleUrl(TestCase):
+class StudentUrls(TestCase):
     def test_resolves_students_list_url(self):
         resolver = self.resolve_by_name('students')
         self.assertEqual(resolver.func.cls, views.StudentViewSet)
@@ -29,3 +29,9 @@ class PeopleUrl(TestCase):
         self.assertEqual(len(expected), len(actual))
         for action in expected:
             self.assertIn(action, actual)
+
+class StudentSerializer(TestCase):
+    def test_serializer_validates(self):
+        data = { 'name': 'Jhon Doe' }
+        serializer = serializers.StudentSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
