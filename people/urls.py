@@ -1,7 +1,10 @@
 from django.urls import path
 from people import views
 
+list_actions = { 'get': 'list', 'post': 'create' }
+single_actions = { 'get': 'retrieve', 'put': 'update', 'delete': 'destroy' }
+
 urlpatterns = [
-    path('', views.StudentViewSet.as_view({ 'get': 'list', 'post': 'create' }), name='students'),
-    path('<int:id>/', views.StudentViewSet.as_view({ 'get': 'retrieve', 'put': 'update', 'delete': 'destroy' }), name='student')
+    path('', views.StudentViewSet.as_view(list_actions), name='students'),
+    path('<int:id>/', views.StudentViewSet.as_view(single_actions), name='student')
 ]
