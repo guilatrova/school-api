@@ -22,3 +22,11 @@ class PeopleUrl(TestCase):
         self.assertEqual(len(allowed), len(resolver.func.actions))
         for action in allowed:
             self.assertIn(action, resolver.func.actions)
+
+    def test_students_single_url_allows(self):
+        resolver = resolve_by_name('student', id=1)
+        allowed = ['get', 'put', 'post', 'delete']
+
+        self.assertEqual(len(allowed), len(resolver.func.actions))
+        for action in allowed:
+            self.assertIn(action, resolver.func.actions)
