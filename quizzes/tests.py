@@ -16,13 +16,13 @@ class AnswerSerializerTestCase(TestCase):
 
 class QuestionSerializerTestCase(TestCase):
     def test_serializer_validates(self):
-        answers_data = { 'choice': 'A', 'description': 'answer' }
+        answers_data = self.create_answers('django', 'flask', 'cherry', 'none')
         question_data =  {
             'description': 'Which is the best framework for perfectionists?',
             'correct_answer': 'A',
-            'answers': self.create_answers('django', 'flask', 'cherry', 'none')
+            'answers': answers_data
         }
-        serializer = serializers.QuestionSerializer(data=data)
+        serializer = serializers.QuestionSerializer(data=question_data)
         self.assertTrue(serializer.is_valid())
 
     def create_answers(self, *args):
@@ -30,7 +30,7 @@ class QuestionSerializerTestCase(TestCase):
         for i in range(len(args)):
             description = args[i]
             choice = chr(65 + i)
-            lst.append({ choice: choice, 'description': description })
+            lst.append({ 'choice': choice, 'description': description })
 
         return lst
 
