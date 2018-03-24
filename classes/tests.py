@@ -72,3 +72,10 @@ class StudentClassesApiIntegrationTestCase(SetupTeacherDataMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(StudentEnrollment.objects.count(), 1)
 
+    def test_lists_student_enrollments(self):
+        url = reverse('student-classes', kwargs={'pk': self.student.id})
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
