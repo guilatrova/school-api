@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse, resolve
 from rest_framework import status
 from rest_framework.test import APITestCase
-from people.models import Teacher
+from people.models import Teacher, Student
 from classes import views, serializers
 from classes.models import Class
 from common.tests.mixins import UrlTestMixin, ApiTestMixin
@@ -21,6 +21,18 @@ class ClassSerializerTestCase(SetupTeacherDataMixin, TestCase):
     def test_serializer_validates(self):
         data = { 'name': 'Python with TDD', 'teacher': self.teacher.id }
         serializer = serializers.ClassSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
+class ClassEnrollmentSerializerTestCase(SetupTeacherDataMixin, TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.school_class = Class.objects.create(name='Python with TDD', teacher=cls.teacher)
+        cls.student = Student.objects.create(name='Jhon Doe')
+
+    def test_serializer_validates(self):
+        data = { 'class': self.school_class.id, 'student': self.student.id }
+        serializer = serializers.ClassEnrollmentSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
 class ClassApiIntegrationTestCase(SetupTeacherDataMixin, ApiTestMixin, APITestCase):
