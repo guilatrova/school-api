@@ -15,6 +15,6 @@ class ClassSerializerTest(TestCase):
         cls.teacher = Teacher.objects.create(name='Guilherme Latrova')
 
     def test_serializer_validates(self):
-        data = { 'name': 'Python with TDD', 'teacher': self.teacher }
+        data = { 'name': 'Python with TDD', 'teacher': self.teacher.id }
         serializer = serializers.ClassSerializer(data=data)
         self.assertTrue(serializer.is_valid())
