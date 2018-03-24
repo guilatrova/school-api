@@ -24,4 +24,11 @@ class QuestionSerializer(serializers.ModelSerializer):
         if len(choices) != 4:
             raise serializers.ValidationError("Choices can't repeat")
 
+        descriptions = set()
+        for answer in answers:
+            descriptions.add(answer['description'].lower().strip())
+
+        if len(descriptions) != 4:
+            raise serializers.ValidationError("Answers can't repeat")
+
         return answers
