@@ -5,22 +5,22 @@ from django.urls import reverse, resolve
 from people import views, serializers
 from people.models import Student
 
-class StudentUrlsTestCase(TestCase):
-    def test_resolves_students_list_url(self):
-        resolver = self.resolve_by_name('students')
-        self.assertEqual(resolver.func.cls, views.StudentViewSet)
+class UrlTestMixin:
+    def test_resolves_list_url(self):
+        resolver = self.resolve_by_name(self.list_name)
+        self.assertEqual(resolver.func.cls, self.view)
 
-    def test_resolves_students_single_url(self):
-        resolver = self.resolve_by_name('student', pk=1)
-        self.assertEqual(resolver.func.cls, views.StudentViewSet)
+    def test_resolves_single_url(self):
+        resolver = self.resolve_by_name(self.single_name, pk=1)
+        self.assertEqual(resolver.func.cls, self.view)
 
-    def test_students_list_url_allows(self):
-        resolver = self.resolve_by_name('students')
+    def test_list_url_allows(self):
+        resolver = self.resolve_by_name(self.list_name)
         allowed = ['get', 'post']
         self.assert_has_actions(allowed, resolver.func.actions)
 
-    def test_students_single_url_allows(self):
-        resolver = self.resolve_by_name('student', pk=1)
+    def test_single_url_allows(self):
+        resolver = self.resolve_by_name(self.single_name, pk=1)
         allowed = ['get', 'put', 'delete']
         self.assert_has_actions(allowed, resolver.func.actions)
 
@@ -33,14 +33,15 @@ class StudentUrlsTestCase(TestCase):
         for action in expected:
             self.assertIn(action, actual)
 
-class TeacherUrlsTestCase(TestCase):
-    def test_resolves_teachers_url(self):
-        resolver = self.resolve_by_name('teachers')
-        self.assertEqual(resolver.func.cls, views.TeacherViewSet)
+class StudentUrlsTestCase(UrlTestMixin, TestCase):
+    list_name = 'students'
+    single_name = 'student'
+    view = views.StudentViewSet
 
-    def resolve_by_name(self, name, **kwargs):
-        url = reverse(name, kwargs=kwargs)
-        return resolve(url)
+class TeacherUrlsTestCase(UrlTestMixin, TestCase):
+    list_name = 'teachers'
+    single_name = 'teacher'
+    view = views.TeacherViewSet
 
 class StudentSerializerTestCase(TestCase):
     def test_serializer_validates(self):
@@ -74,7 +75,7 @@ class StudentApiIntegrationTestCase(APITestCase):
     def test_update_student(self):
         id = self.pre_created_student.id
         data = { 'pk': id, 'name': 'Changed' }
-        
+
         response = self.client.put(self.single_url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
