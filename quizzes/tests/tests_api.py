@@ -48,6 +48,10 @@ class AssignmentApiTestCase(SetupSchoolClassDataMixin, APITestCase):
         cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
         cls.assignment = Assignment.objects.create(quiz=cls.quiz, enrollment=cls.enrollment)
 
+        other_student = Student.objects.create(name='Mary Doe') #Make sure only student's assignments are handled
+        other_enrollment = StudentEnrollment.objects.create(student=other_student, school_class=cls.school_class)
+        Assignment.objects.create(quiz=cls.quiz, enrollment=other_enrollment)
+
     def test_api_creates_assignment(self):
         data = {
             'quiz': self.quiz.id,
@@ -58,7 +62,7 @@ class AssignmentApiTestCase(SetupSchoolClassDataMixin, APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Assignment.objects.count(), 2)
+        self.assertEqual(Assignment.objects.count(), 3)
 
     def test_api_lists_assignments(self):
         url = reverse('student-assignments', kwargs={'student_id': self.student.id})
