@@ -25,6 +25,12 @@ def create_answers(*args):
 
     return lst
 
+class SetupSchoolClassDataMixin:
+    @classmethod
+    def setUpTestData(cls):
+        teacher = Teacher.objects.create(name='Guilherme Latrova')
+        cls.school_class = SchoolClass.objects.create(name='QA', teacher=teacher)
+
 class QuizUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'quizzes'
     single_name = 'quiz'
@@ -57,14 +63,14 @@ class QuestionSerializerTestCase(TestCase):
         answers_data = create_answers('yes', 'no', 'well...', 'I dont know')
         answers_data[1]['choice'] = 'A' #now we got two A choices
         question_data = create_question(answers_data)
-        
+
         serializer = serializers.QuestionSerializer(data=question_data)
         self.assert_has_error(serializer, 'answers')
 
     def test_answer_validates_should_not_allows_repeated_answers(self):
         answers_data = create_answers('same', 'same', 'other', 'one more')
         question_data = create_question(answers_data)
-        
+
         serializer = serializers.QuestionSerializer(data=question_data)
         self.assert_has_error(serializer, 'answers')
 
@@ -72,12 +78,7 @@ class QuestionSerializerTestCase(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertIn(key, serializer.errors)
 
-class QuizSerializerTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        teacher = Teacher.objects.create(name='Guilherme Latrova')
-        cls.school_class = SchoolClass.objects.create(name='QA', teacher=teacher)
-
+class QuizSerializerTestCase(SetupSchoolClassDataMixin, TestCase):
     def test_serializer_validates(self):
         answers_data = create_answers('A', 'B', 'C', 'D')
         questions_data = [create_question(answers_data) for x in range(3)]
@@ -105,12 +106,7 @@ class QuizSerializerTestCase(TestCase):
         args, kwargs = first_call
         self.assertEqual(len(args), 1)
 
-class FactoriesTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        teacher = Teacher.objects.create(name='Guilherme Latrova')
-        cls.school_class = SchoolClass.objects.create(name='QA', teacher=teacher)
-
+class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):
         answers = create_answers('A', 'B', 'C', 'D')
         questions = [create_question(answers) for x in range(3)]
@@ -125,12 +121,8 @@ class FactoriesTestCase(TestCase):
         self.assertEqual(Answer.objects.count(), 4 * 3)
         self.assertEqual(Question.objects.count(), 3)
         self.assertEqual(Quiz.objects.count(), 1)
-        
-class QuizApiIntegrationTestCase(APITestCase):
-    @classmethod
-    def setUpTestData(cls):
-        teacher = Teacher.objects.create(name='Guilherme Latrova')
-        cls.school_class = SchoolClass.objects.create(name='QA', teacher=teacher)
+
+class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
 
     def setUp(self):
         answers = create_answers('A', 'B', 'C', 'D')
