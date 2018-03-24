@@ -1,3 +1,5 @@
 from django.test import TestCase
+from common.tests.mixins import UrlTestMixin
 
-# Create your tests here.
+class QuizUrlsTestCase(UrlTestMixin, TestCase):
+    pass

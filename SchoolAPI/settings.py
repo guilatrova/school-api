@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     #LOCAL MODULES
     'people',
-    'classes'
+    'classes',
+    'quizzes'
 ]
 
 MIDDLEWARE = [
