@@ -71,3 +71,9 @@ class StudentApiIntegrationTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.pre_created_student.refresh_from_db()
         self.assertEqual(self.pre_created_student.name, data['name'])
+
+    def test_retrieves_student(self):
+        response = self.client.get(self.single_url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], self.pre_created_student.name)
