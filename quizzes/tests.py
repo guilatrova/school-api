@@ -25,6 +25,17 @@ class QuestionSerializerTestCase(TestCase):
         serializer = serializers.QuestionSerializer(data=question_data)
         self.assertTrue(serializer.is_valid())
 
+    def test_validates_should_have_4_answers_choices(self):
+        answers_data = self.create_answers('just', 'three', 'answers')
+        question_data =  {
+            'description': 'Which is the best framework for perfectionists?',
+            'correct_answer': 'A',
+            'answers': answers_data
+        }
+        serializer = serializers.QuestionSerializer(data=question_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('non_field_errors', serializer.errors)
+
     def create_answers(self, *args):
         lst = []
         for i in range(len(args)):
@@ -33,7 +44,6 @@ class QuestionSerializerTestCase(TestCase):
             lst.append({ 'choice': choice, 'description': description })
 
         return lst
-
 
 # DO LATER
 # class QuizSerializerTestCase(TestCase):
