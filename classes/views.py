@@ -6,3 +6,6 @@ from .models import Class
 class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     queryset = Class.objects.all()
+
+class StudentClassesViewSet(viewsets.ModelViewSet):
+    pass

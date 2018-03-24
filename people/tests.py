@@ -3,12 +3,17 @@ from django.test import TestCase
 from django.urls import reverse
 from people import views, serializers
 from people.models import Student, Teacher
+from classes import views as classes_views
 from common.tests.mixins import UrlTestMixin, ApiTestMixin
 
 class StudentUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'students'
     single_name = 'student'
     view = views.StudentViewSet
+
+    def test_resolves_students_classes_list(self):
+        resolver = self.resolve_by_name('student-classes', pk=1)
+        self.assertEqual(resolver.func.cls, classes_views.StudentClassesViewSet)
 
 class TeacherUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'teachers'
