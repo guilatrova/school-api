@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
+from rest_framework import status
 from people.models import Teacher
 from classes import views, serializers
 from classes.models import Class

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from .serializers import ClassSerializer
 
 class ClassViewSet(viewsets.ModelViewSet):
-    pass
+    serializer_class = ClassSerializer
