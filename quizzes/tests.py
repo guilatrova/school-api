@@ -1,4 +1,7 @@
 from django.test import TestCase
+from django.urls import reverse
+from rest_framework.test import APITestCase
+from rest_framework import status
 from unittest.mock import patch, MagicMock
 from quizzes import views, serializers, factories
 from quizzes.models import Quiz, Question, Answer
@@ -123,3 +126,23 @@ class FactoriesTestCase(TestCase):
         self.assertEqual(Question.objects.count(), 3)
         self.assertEqual(Quiz.objects.count(), 1)
         
+class QuizApiIntegrationTestCase(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        teacher = Teacher.objects.create(name='Guilherme Latrova')
+        cls.school_class = SchoolClass.objects.create(name='QA', teacher=teacher)
+
+    def setUp(self):
+        answers = create_answers('A', 'B', 'C', 'D')
+        self.questions = [create_question(answers) for x in range(4)]
+
+    def test_api_creates_complete_quiz(self):
+        data = {
+            'school_class': self.school_class.id,
+            'questions': self.questions
+        }
+
+        response = self.client.post(reverse('quizzes'), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Quiz.objects.count(), 1)
