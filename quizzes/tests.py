@@ -1,6 +1,6 @@
 from django.test import TestCase
 from unittest.mock import patch, MagicMock
-from quizzes import views, serializers
+from quizzes import views, serializers, factories
 from people.models import Teacher
 from classes.models import SchoolClass
 from common.tests.mixins import UrlTestMixin
@@ -98,4 +98,25 @@ class QuizSerializerTestCase(TestCase):
         first_call = mock.call_args_list[0]
         args, kwargs = first_call
         self.assertEqual(len(args), 1)
-    
+
+class FactoriesTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        teacher = Teacher.objects.create(name='Guilherme Latrova')
+        cls.school_class = SchoolClass.objects.create(name='QA', teacher=teacher)
+
+    def setUp(self):
+        answers = create_answers('A', 'B', 'C', 'D')
+        questions = [create_question(answers) for x in range(3)]
+        self.data = {
+            'school_class': self.school_class,
+            'questions': questions
+        }
+
+    def test_create_quiz(self):
+        factories.create_quiz(self.data)
+
+        self.assertEqual(Answer.objects.count(), 4 * 3)
+        self.assertEqual(Question.objects.count(), 3)
+        self.assertEqual(Quiz.objects.count(), 1)
+        
