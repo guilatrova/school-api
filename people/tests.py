@@ -11,7 +11,7 @@ class StudentUrlsTestCase(TestCase):
         self.assertEqual(resolver.func.cls, views.StudentViewSet)
 
     def test_resolves_students_single_url(self):
-        resolver = self.resolve_by_name('student', id=1)
+        resolver = self.resolve_by_name('student', pk=1)
         self.assertEqual(resolver.func.cls, views.StudentViewSet)
 
     def test_students_list_url_allows(self):
@@ -20,7 +20,7 @@ class StudentUrlsTestCase(TestCase):
         self.assert_has_actions(allowed, resolver.func.actions)
 
     def test_students_single_url_allows(self):
-        resolver = self.resolve_by_name('student', id=1)
+        resolver = self.resolve_by_name('student', pk=1)
         allowed = ['get', 'put', 'delete']
         self.assert_has_actions(allowed, resolver.func.actions)
 
@@ -42,10 +42,11 @@ class StudentSerializerTestCase(TestCase):
 class StudentApiIntegrationTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        Student.objects.create(name='Jhon Doe')
+        cls.pre_created_student = Student.objects.create(name='Jhon Doe')
 
     def setUp(self):
-        self.list_url = url = reverse('students')
+        self.list_url = reverse('students')
+        self.single_url = reverse('student', kwargs={'pk': self.pre_created_student.id})
 
     def test_creates_student(self):
         data = { 'name': 'Jhon Doe' }
@@ -60,3 +61,13 @@ class StudentApiIntegrationTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+    def test_update_student(self):
+        id = self.pre_created_student.id
+        data = { 'pk': id, 'name': 'Changed' }
+        
+        response = self.client.put(self.single_url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.pre_created_student.refresh_from_db()
+        self.assertEqual(self.pre_created_student.name, data['name'])

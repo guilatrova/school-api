@@ -6,5 +6,5 @@ single_actions = { 'get': 'retrieve', 'put': 'update', 'delete': 'destroy' }
 
 urlpatterns = [
     path('', views.StudentViewSet.as_view(list_actions), name='students'),
-    path('<int:id>/', views.StudentViewSet.as_view(single_actions), name='student')
+    path('<int:pk>/', views.StudentViewSet.as_view(single_actions), name='student')
 ]
