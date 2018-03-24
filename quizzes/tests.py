@@ -34,7 +34,7 @@ class QuestionSerializerTestCase(TestCase):
         }
         serializer = serializers.QuestionSerializer(data=question_data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('non_field_errors', serializer.errors)
+        self.assertIn('answers', serializer.errors)    
 
     def create_answers(self, *args):
         lst = []
