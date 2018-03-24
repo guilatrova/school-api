@@ -9,6 +9,10 @@ from people.models import Teacher
 from classes.models import SchoolClass
 from common.tests.mixins import UrlTestMixin
 
+def create_questions(how_many):
+    answers = create_answers('A', 'B', 'C', 'D')
+    return [create_question(answers) for x in range(how_many)]
+
 def create_question(answers):
     return {
         'description': 'question',
@@ -123,10 +127,14 @@ class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
         self.assertEqual(Quiz.objects.count(), 1)
 
 class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        questions = create_questions(2)
+        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': questions })
 
     def setUp(self):
-        answers = create_answers('A', 'B', 'C', 'D')
-        self.questions = [create_question(answers) for x in range(4)]
+        self.questions = create_questions(4)
 
     def test_api_creates_complete_quiz(self):
         data = {
@@ -137,4 +145,4 @@ class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
         response = self.client.post(reverse('quizzes'), data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Quiz.objects.count(), 1)
+        self.assertEqual(Quiz.objects.count(), 2)
