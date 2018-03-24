@@ -29,7 +29,7 @@ class TestSerializerTestCase(TestCase):
         self.assertTrue(serializer.is_valid())
 
 class ApiTestMixin:
-    def test_creates_student(self):
+    def test_creates(self):
         data = { 'name': 'Jhon Doe' }
 
         response = self.client.post(self.list_url, data, format='json')
