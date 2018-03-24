@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Answer, Question
+from .models import Answer, Question, Quiz
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,3 +31,10 @@ class QuestionSerializer(serializers.ModelSerializer):
             check.add(getter(answer))
         
         return len(check) != 4
+
+class QuizSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True)
+
+    class Meta:
+        model = Quiz
+        fields = ('id', 'school_class', 'questions')

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from quizzes import views, serializers
 from people.models import Teacher
+from classes.models import SchoolClass
 from common.tests.mixins import UrlTestMixin
 
 class QuizUrlsTestCase(UrlTestMixin, TestCase):
@@ -67,12 +68,13 @@ class QuestionSerializerTestCase(TestCase):
 class QuizSerializerTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.teacher = Teacher.objects.create(name='Guilherme Latrova')
+        teacher = Teacher.objects.create(name='Guilherme Latrova')
+        cls.school_class = SchoolClass.objects.create(name='QA', teacher=teacher)
 
     def test_serializer_validates(self):
         answers_data = self.create_answers('A', 'B', 'C', 'D')
         questions_data = [self.create_question(answers_data) for x in range(3)]
-        data = { 'teacher': self.teacher.id, 'questions': questions_data }
+        data = { 'school_class': self.school_class.id, 'questions': questions_data }
 
         serializer = serializers.QuizSerializer(data=data)
         self.assertTrue(serializer.is_valid(raise_exception=True))

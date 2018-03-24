@@ -8,9 +8,13 @@ class HasAnswerChoices:
         ('D', 4),
     )
 
+class Quiz(models.Model):
+    school_class = models.ForeignKey('classes.SchoolClass', on_delete=models.PROTECT)    
+
 class Question(models.Model, HasAnswerChoices):
     description = models.CharField(max_length=100)
     correct_answer = models.PositiveSmallIntegerField(choices=HasAnswerChoices.ANSWER_CHOICES)
+    quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE, related_name='questions')
 
 class Answer(models.Model, HasAnswerChoices):
     description = models.CharField(max_length=40)
