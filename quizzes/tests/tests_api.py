@@ -40,7 +40,7 @@ class QuizApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
-class AssignmentApiTestCase(SetupQuizDataMixin, APITestCase):
+class StudentAssignmentApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -66,6 +66,22 @@ class AssignmentApiTestCase(SetupQuizDataMixin, APITestCase):
 
     def test_api_lists_assignments(self):
         url = reverse('student-assignments', kwargs={'student_id': self.student.id})
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+class AssignmentApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.student = Student.objects.create(name='Jhon Doe')
+        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
+        cls.assignment = Assignment.objects.create(quiz=cls.quiz, enrollment=cls.enrollment)
+
+    def test_api_retrieves_assignment(self):
+        url = reverse('assignment', kwargs={'pk': self.assignment.id})
 
         response = self.client.get(url, format='json')
 
