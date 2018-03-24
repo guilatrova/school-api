@@ -4,6 +4,7 @@ from django.urls import reverse
 from people import views, serializers
 from people.models import Student, Teacher
 from classes import views as classes_views
+from quizzes import views as quizzes_views
 from common.tests.mixins import UrlTestMixin, ApiTestMixin
 
 class StudentUrlsTestCase(UrlTestMixin, TestCase):
@@ -19,6 +20,10 @@ class StudentUrlsTestCase(UrlTestMixin, TestCase):
         resolver = self.resolve_by_name('student-classes', student_id=1)
         allowed = ['get', 'post']
         self.assert_has_actions(allowed, resolver.func.actions)
+
+    def test_resolves_student_assignments_list(self):
+        resolver = self.resolve_by_name('student-assignments', student_id=1)
+        self.assertEqual(resolver.func.cls, quizzes_views.StudentAssignmentsViewSet)
 
 class TeacherUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'teachers'
