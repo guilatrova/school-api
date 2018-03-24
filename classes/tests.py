@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from people.models import Teacher, Student
 from classes import views, serializers
-from classes.models import SchoolClass
+from classes.models import SchoolClass, StudentEnrollment
 from common.tests.mixins import UrlTestMixin, ApiTestMixin
 
 class SchoolClassUrlsTestCase(UrlTestMixin, TestCase):
@@ -54,3 +54,6 @@ class ClassApiIntegrationTestCase(SetupTeacherDataMixin, ApiTestMixin, APITestCa
     @property
     def update_data(self):
         return { 'id': self.pre_created_entity.id, 'name': 'Changed', 'teacher': self.teacher.id }
+
+class StudentClassesApiIntegrationTestCase(ApiTestMixin, APITestCase):
+    pass
