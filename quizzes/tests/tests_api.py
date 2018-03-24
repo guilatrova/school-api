@@ -7,12 +7,13 @@ from classes.models import SchoolClass, StudentEnrollment
 from quizzes import factories
 from .helpers import SetupSchoolClassDataMixin, create_questions
 
-class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
+class SetupQuizDataMixin(SetupSchoolClassDataMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
         cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
 
+class QuizApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
     def setUp(self):
         self.questions = create_questions(4)
 
@@ -39,12 +40,11 @@ class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
-class AssignmentApiTestCase(SetupSchoolClassDataMixin, APITestCase):
+class AssignmentApiTestCase(SetupQuizDataMixin, APITestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
         cls.student = Student.objects.create(name='Jhon Doe')
-        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
         cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
         cls.assignment = Assignment.objects.create(quiz=cls.quiz, enrollment=cls.enrollment)
 
