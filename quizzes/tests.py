@@ -91,3 +91,4 @@ class QuizSerializerTestCase(TestCase):
         self.assertTrue(serializer.is_valid(raise_exception=True))
         serializer.save()
         self.assertTrue(mock.called)
+        self.assertEqual(len(mock.call_args_list), 1)

@@ -41,4 +41,4 @@ class QuizSerializer(serializers.ModelSerializer):
         fields = ('id', 'school_class', 'questions')
 
     def create(self, validated_data):
-        return factories.create_quiz()
+        return factories.create_quiz(validated_data)
