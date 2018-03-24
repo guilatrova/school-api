@@ -1,10 +1,9 @@
 from rest_framework.test import APITestCase
-from rest_framework import status
 from django.test import TestCase
 from django.urls import reverse
 from people import views, serializers
 from people.models import Student, Teacher
-from common.tests.mixins import UrlTestMixin
+from common.tests.mixins import UrlTestMixin, ApiTestMixin
 
 class StudentUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'students'
@@ -28,45 +27,13 @@ class TestSerializerTestCase(TestCase):
         serializer = serializers.TeacherSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
-class ApiTestMixin:
-    def test_creates(self):
-        data = { 'name': 'Jhon Doe' }
-
-        response = self.client.post(self.list_url, data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(self.model.objects.count(), 2)
-
-    def test_lists(self):
-        response = self.client.get(self.list_url, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-
-    def test_update(self):
-        id = self.pre_created_entity.id
-        data = { 'pk': id, 'name': 'Changed' }
-
-        response = self.client.put(self.single_url, data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.pre_created_entity.refresh_from_db()
-        self.assertEqual(self.pre_created_entity.name, data['name'])
-
-    def test_retrieves(self):
-        response = self.client.get(self.single_url, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], self.pre_created_entity.name)
-
-    def test_deletes(self):
-        response = self.client.delete(self.single_url, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(self.model.objects.count(), 0)
-
 class StudentApiIntegrationTestCase(ApiTestMixin, APITestCase):
     model = Student
+    post_data = { 'name': 'Jhon Doe' }
+
+    @property
+    def update_data(self):
+        return { 'id': self.pre_created_entity.id, 'name': 'Changed' }
 
     @classmethod
     def setUpTestData(cls):
@@ -78,6 +45,11 @@ class StudentApiIntegrationTestCase(ApiTestMixin, APITestCase):
 
 class TeacherApiIntegrationTestCase(ApiTestMixin, APITestCase):
     model = Teacher
+    post_data = { 'name': 'Guilherme Latrova' }
+
+    @property
+    def update_data(self):
+        return { 'id': self.pre_created_entity.id, 'name': 'Changed' }
 
     @classmethod
     def setUpTestData(cls):
