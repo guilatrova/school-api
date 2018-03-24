@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import ClassSerializer
-from .models import Class
+from .serializers import SchoolClassSerializer
+from .models import SchoolClass
 
-class ClassViewSet(viewsets.ModelViewSet):
-    serializer_class = ClassSerializer
-    queryset = Class.objects.all()
+class SchoolClassViewSet(viewsets.ModelViewSet):
+    serializer_class = SchoolClassSerializer
+    queryset = SchoolClass.objects.all()
 
 class StudentClassesViewSet(viewsets.ModelViewSet):
     pass
