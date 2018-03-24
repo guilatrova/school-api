@@ -36,7 +36,7 @@ class StudentUrlsTestCase(TestCase):
 class TeacherUrlsTestCase(TestCase):
     def test_resolves_teachers_url(self):
         resolver = self.resolve_by_name('teachers')
-        self.assertEqual(resolver.func.cls, views.StudentViewSet)
+        self.assertEqual(resolver.func.cls, views.TeacherViewSet)
 
     def resolve_by_name(self, name, **kwargs):
         url = reverse(name, kwargs=kwargs)
