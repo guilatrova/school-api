@@ -55,56 +55,61 @@ class TestSerializerTestCase(TestCase):
         serializer = serializers.TeacherSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
-class StudentApiIntegrationTestCase(APITestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.pre_created_student = Student.objects.create(name='Jhon Doe')
-
-    def setUp(self):
-        self.list_url = reverse('students')
-        self.single_url = reverse('student', kwargs={'pk': self.pre_created_student.id})
-
+class ApiTestMixin:
     def test_creates_student(self):
         data = { 'name': 'Jhon Doe' }
 
         response = self.client.post(self.list_url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Student.objects.count(), 2)
+        self.assertEqual(self.model.objects.count(), 2)
 
-    def test_lists_students(self):
+    def test_lists(self):
         response = self.client.get(self.list_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
-    def test_update_student(self):
-        id = self.pre_created_student.id
+    def test_update(self):
+        id = self.pre_created_entity.id
         data = { 'pk': id, 'name': 'Changed' }
 
         response = self.client.put(self.single_url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.pre_created_student.refresh_from_db()
-        self.assertEqual(self.pre_created_student.name, data['name'])
+        self.pre_created_entity.refresh_from_db()
+        self.assertEqual(self.pre_created_entity.name, data['name'])
 
-    def test_retrieves_student(self):
+    def test_retrieves(self):
         response = self.client.get(self.single_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], self.pre_created_student.name)
+        self.assertEqual(response.data['name'], self.pre_created_entity.name)
 
-    def test_deletes_student(self):
+    def test_deletes(self):
         response = self.client.delete(self.single_url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Student.objects.count(), 0)
+        self.assertEqual(self.model.objects.count(), 0)
 
-class TeacherApiIntegrationTestCase(APITestCase):
-    def test_creates_teacher(self):
-        data = { 'name': 'Jhon Doe' }
+class StudentApiIntegrationTestCase(ApiTestMixin, APITestCase):
+    model = Student
 
-        response = self.client.post(reverse('teachers'), data, format='json')
+    @classmethod
+    def setUpTestData(cls):
+        cls.pre_created_entity = Student.objects.create(name='Jhon Doe')
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Teacher.objects.count(), 1)
+    def setUp(self):
+        self.list_url = reverse('students')
+        self.single_url = reverse('student', kwargs={'pk': self.pre_created_entity.id})
+
+class TeacherApiIntegrationTestCase(ApiTestMixin, APITestCase):
+    model = Teacher
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.pre_created_entity = Teacher.objects.create(name='Jhon Doe')
+
+    def setUp(self):
+        self.list_url = reverse('teachers')
+        self.single_url = reverse('teacher', kwargs={'pk': self.pre_created_entity.id})
