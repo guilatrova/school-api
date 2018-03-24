@@ -34,7 +34,7 @@
             "cwd": "${workspaceRoot}",
             "args": [
                 "test"
-                ,"classes"
+                ,"quizzes"
             ],
             "envFile": "${workspaceRoot}/.env",
             "debugOptions": [
