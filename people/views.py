@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import StudentSerializer
+from .serializers import StudentSerializer, TeacherSerializer
 from .models import Student
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -8,4 +8,4 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
 
 class TeacherViewSet(viewsets.ModelViewSet):
-    pass
+    serializer_class = TeacherSerializer
