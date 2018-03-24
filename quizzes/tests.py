@@ -130,8 +130,7 @@ class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        questions = create_questions(2)
-        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': questions })
+        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
 
     def setUp(self):
         self.questions = create_questions(4)
@@ -147,8 +146,8 @@ class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Quiz.objects.count(), 2)
 
-    def test_api_retrieve_quiz(self):
+    def test_api_retrieves_quiz(self):
         response = self.client.get(reverse('quiz', kwargs={'pk': self.quiz.id}), format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data['id'], self.quiz.id)
