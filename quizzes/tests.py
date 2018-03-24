@@ -90,5 +90,12 @@ class QuizSerializerTestCase(TestCase):
 
         self.assertTrue(serializer.is_valid(raise_exception=True))
         serializer.save()
+
         self.assertTrue(mock.called)
-        self.assertEqual(len(mock.call_args_list), 1)
+        self.assert_called_with_one_arg(mock)
+
+    def assert_called_with_one_arg(self, mock):
+        first_call = mock.call_args_list[0]
+        args, kwargs = first_call
+        self.assertEqual(len(args), 1)
+    
