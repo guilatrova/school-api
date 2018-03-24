@@ -3,7 +3,7 @@ from rest_framework import status
 from django.test import TestCase
 from django.urls import reverse, resolve
 from people import views, serializers
-from people.models import Student
+from people.models import Student, Teacher
 
 class UrlTestMixin:
     def test_resolves_list_url(self):
@@ -99,3 +99,12 @@ class StudentApiIntegrationTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Student.objects.count(), 0)
+
+class TeacherApiIntegrationTestCase(APITestCase):
+    def test_creates_teacher(self):
+        data = { 'name': 'Jhon Doe' }
+
+        response = self.client.post(reverse('teachers'), data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Teacher.objects.count(), 1)
