@@ -5,7 +5,7 @@ from rest_framework import status
 from unittest.mock import patch, MagicMock
 from quizzes import views, serializers, factories
 from quizzes.models import Quiz, Question, Answer
-from people.models import Teacher
+from people.models import Teacher, Student
 from classes.models import SchoolClass
 from common.tests.mixins import UrlTestMixin
 
@@ -109,6 +109,18 @@ class QuizSerializerTestCase(SetupSchoolClassDataMixin, TestCase):
         first_call = mock.call_args_list[0]
         args, kwargs = first_call
         self.assertEqual(len(args), 1)
+
+class AssignmentSerializerTestCase(SetupSchoolClassDataMixin, TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
+        cls.student = Student.objects.create(name='Jhon Doe')
+
+    def test_serializer_validates(self):
+        data = { 'quiz': self.quiz.id, 'student': self.student.id }
+        serializer = serializers.AssignmentSerializer(data=data)
+        self.assertTrue(serializer.is_valid(raise_exception=True))
 
 class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):
