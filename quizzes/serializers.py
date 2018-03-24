@@ -17,18 +17,17 @@ class QuestionSerializer(serializers.ModelSerializer):
         if len(answers) != 4:
             raise serializers.ValidationError('Question should have exactly 4 answer choices')
 
-        choices = set()
-        for answer in answers:
-            choices.add(answer['choice'])
-
-        if len(choices) != 4:
+        if self._has_answer_duplicates(answers, lambda x: x['choice']):
             raise serializers.ValidationError("Choices can't repeat")
 
-        descriptions = set()
-        for answer in answers:
-            descriptions.add(answer['description'].lower().strip())
-
-        if len(descriptions) != 4:
+        if self._has_answer_duplicates(answers, lambda x: x['description'].lower().strip()):
             raise serializers.ValidationError("Answers can't repeat")
 
         return answers
+
+    def _has_answer_duplicates(self, answers, getter):
+        check = set()
+        for answer in answers:
+            check.add(getter(answer))
+        
+        return len(check) != 4
