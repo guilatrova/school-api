@@ -25,16 +25,28 @@ class QuestionSerializerTestCase(TestCase):
         serializer = serializers.QuestionSerializer(data=question_data)
         self.assertTrue(serializer.is_valid())
 
-    def test_validates_should_have_4_answers_choices(self):
+    def test_answer_validates_should_have_4_answers_choices(self):
         answers_data = self.create_answers('just', 'three', 'answers')
         question_data =  {
-            'description': 'Which is the best framework for perfectionists?',
-            'correct_answer': 'A',
+            'description': 'This test allows less than four choices?',
+            'correct_answer': 'B',
             'answers': answers_data
         }
         serializer = serializers.QuestionSerializer(data=question_data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('answers', serializer.errors)    
+        self.assertIn('answers', serializer.errors)
+
+    def test_answer_validates_should_not_allows_repetead_choices(self):
+        answers_data = self.create_answers('yes', 'no', 'well...', 'I dont know')
+        answers_data[1]['choice'] = 'A' #now we got two A choices
+        question_data = {
+            'description': 'This test allows same choice index?',
+            'correct_answer': 'B',
+            'answers': answers_data
+        }
+        serializer = serializers.QuestionSerializer(data=question_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('answers', serializer.errors)
 
     def create_answers(self, *args):
         lst = []
