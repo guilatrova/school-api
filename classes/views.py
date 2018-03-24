@@ -17,5 +17,4 @@ class StudentClassesViewSet(mixins.CreateModelMixin,
     serializer_class = StudentEnrollmentSerializer
 
     def get_queryset(self):
-        student_id = self.kwargs['pk']
-        return StudentEnrollment.objects.filter(student_id=student_id)
+        return StudentEnrollment.objects.filter(student_id=self.kwargs['student_id'])

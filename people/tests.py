@@ -12,11 +12,11 @@ class StudentUrlsTestCase(UrlTestMixin, TestCase):
     view = views.StudentViewSet
 
     def test_resolves_students_classes_list(self):
-        resolver = self.resolve_by_name('student-classes', pk=1)
+        resolver = self.resolve_by_name('student-classes', student_id=1)
         self.assertEqual(resolver.func.cls, classes_views.StudentClassesViewSet)
 
     def test_classes_list_url_allows(self):
-        resolver = self.resolve_by_name('student-classes', pk=1)
+        resolver = self.resolve_by_name('student-classes', student_id=1)
         allowed = ['get', 'post']
         self.assert_has_actions(allowed, resolver.func.actions)
 

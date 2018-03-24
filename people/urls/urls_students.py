@@ -9,5 +9,5 @@ classes_action = { 'get': 'list', 'post': 'create' }
 urlpatterns = [
     path('', views.StudentViewSet.as_view(list_actions), name='students'),
     path('<int:pk>/', views.StudentViewSet.as_view(single_actions), name='student'),
-    path('<int:pk>/classes', classes_views.StudentClassesViewSet.as_view(classes_action), name='student-classes'),
+    path('<int:student_id>/classes', classes_views.StudentClassesViewSet.as_view(classes_action), name='student-classes'),
 ]

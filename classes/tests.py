@@ -67,7 +67,7 @@ class StudentClassesApiIntegrationTestCase(SetupTeacherDataMixin, APITestCase):
         enrollment = StudentEnrollment(student=other_student, school_class=cls.school_class)
 
     def setUp(self):
-        self.url = reverse('student-classes', kwargs={'pk': self.student.id})
+        self.url = reverse('student-classes', kwargs={'student_id': self.student.id})
 
     def test_creates_enrollment(self):
         data = { 'student': self.student.id, 'school_class': self.school_class.id }
