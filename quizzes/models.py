@@ -8,6 +8,10 @@ class HasAnswerChoices:
         (4, 'D'),
     )
 
+class Assignment(models.Model):
+    quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)
+    enrollment = models.ForeignKey('classes.StudentEnrollment', on_delete=models.CASCADE)
+
 class Quiz(models.Model):
     school_class = models.ForeignKey('classes.SchoolClass', on_delete=models.PROTECT)    
 

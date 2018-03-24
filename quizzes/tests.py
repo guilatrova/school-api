@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 from quizzes import views, serializers, factories
 from quizzes.models import Quiz, Question, Answer
 from people.models import Teacher, Student
-from classes.models import SchoolClass
+from classes.models import SchoolClass, StudentEnrollment
 from common.tests.mixins import UrlTestMixin
 
 def create_questions(how_many):
@@ -114,11 +114,12 @@ class AssignmentSerializerTestCase(SetupSchoolClassDataMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
+        student = Student.objects.create(name='Jhon Doe')
         cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
-        cls.student = Student.objects.create(name='Jhon Doe')
+        cls.enrollment = StudentEnrollment.objects.create(student=student, school_class=cls.school_class)
 
     def test_serializer_validates(self):
-        data = { 'quiz': self.quiz.id, 'student': self.student.id }
+        data = { 'quiz': self.quiz.id, 'enrollment': self.enrollment.id }
         serializer = serializers.AssignmentSerializer(data=data)
         self.assertTrue(serializer.is_valid(raise_exception=True))
 

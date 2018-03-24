@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from quizzes import factories
-from .models import Answer, Question, Quiz
+from .models import Answer, Question, Quiz, Assignment
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,3 +42,8 @@ class QuizSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return factories.create_quiz(validated_data)
+
+class AssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assignment
+        fields = ('id', 'quiz', 'enrollment')
