@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     #LOCAL MODULES
-    'people'
+    'people',
+    'classes'
 ]
 
 MIDDLEWARE = [
