@@ -12,3 +12,8 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'description', 'answers')
+
+    def validate(self, data):
+        if len(data['answers']) != 4:
+            raise serializers.ValidationError('Question should have exactly 4 answer choices')
+        return data
