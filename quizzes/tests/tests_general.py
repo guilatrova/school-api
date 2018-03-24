@@ -13,6 +13,12 @@ class QuizUrlsTestCase(UrlTestMixin, TestCase):
     allowed_list = ['get', 'post']
     view = views.QuizViewSet
 
+class AssignmentUrlsTestCase(UrlTestMixin, TestCase):
+    list_name = 'assignments'
+    single_name = 'assignment'
+    allowed_single = ['get']
+    allowed_list = ['get']
+
 class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):
         answers = create_answers('A', 'B', 'C', 'D')
