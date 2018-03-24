@@ -1,5 +1,5 @@
 from django.test import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from quizzes import views, serializers
 from people.models import Teacher
 from classes.models import SchoolClass
@@ -80,7 +80,7 @@ class QuizSerializerTestCase(TestCase):
         serializer = serializers.QuizSerializer(data=data)
         self.assertTrue(serializer.is_valid(raise_exception=True))
 
-    @patch('quizzes.factories.QuizFactory.create')
+    @patch('quizzes.factories.create_quiz', return_value=MagicMock())
     def test_serializer_creates(self, mock):
         answers_data = create_answers('A', 'B', 'C', 'D')
         questions_data = [create_question(answers_data) for x in range(3)]
