@@ -77,3 +77,9 @@ class StudentApiIntegrationTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.pre_created_student.name)
+
+    def test_deletes_student(self):
+        response = self.client.delete(self.single_url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Student.objects.count(), 0)
