@@ -18,7 +18,7 @@ class QuestionSerializerTestCase(TestCase):
     def test_serializer_validates(self):
         answers_data = self.create_answers('django', 'flask', 'cherry', 'none')
         question_data =  question_data =  self.create_question(answers_data)
-        
+
         serializer = serializers.QuestionSerializer(data=question_data)
         self.assertTrue(serializer.is_valid())
 
@@ -32,6 +32,13 @@ class QuestionSerializerTestCase(TestCase):
     def test_answer_validates_should_not_allows_repetead_choices(self):
         answers_data = self.create_answers('yes', 'no', 'well...', 'I dont know')
         answers_data[1]['choice'] = 'A' #now we got two A choices
+        question_data = self.create_question(answers_data)
+        
+        serializer = serializers.QuestionSerializer(data=question_data)
+        self.assert_has_error(serializer, 'answers')
+
+    def test_answer_validates_should_not_allows_repeated_answers(self):
+        answers_data = self.create_answers('same', 'same', 'other', 'one more')
         question_data = self.create_question(answers_data)
         
         serializer = serializers.QuestionSerializer(data=question_data)
