@@ -25,6 +25,8 @@ def create_answers(*args):
 class QuizUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'quizzes'
     single_name = 'quiz'
+    allowed_single = ['get']
+    allowed_list = ['get', 'post']
     view = views.QuizViewSet
 
 class AnswerSerializerTestCase(TestCase):

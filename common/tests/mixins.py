@@ -2,6 +2,9 @@ from django.urls import reverse, resolve
 from rest_framework import status
 
 class UrlTestMixin:
+    allowed_single = ['get', 'put', 'delete']
+    allowed_list = ['get', 'post']
+
     def test_resolves_list_url(self):
         resolver = self.resolve_by_name(self.list_name)
         self.assertEqual(resolver.func.cls, self.view)
@@ -12,13 +15,11 @@ class UrlTestMixin:
 
     def test_list_url_allows(self):
         resolver = self.resolve_by_name(self.list_name)
-        allowed = ['get', 'post']
-        self.assert_has_actions(allowed, resolver.func.actions)
+        self.assert_has_actions(self.allowed_list, resolver.func.actions)
 
     def test_single_url_allows(self):
         resolver = self.resolve_by_name(self.single_name, pk=1)
-        allowed = ['get', 'put', 'delete']
-        self.assert_has_actions(allowed, resolver.func.actions)
+        self.assert_has_actions(self.allowed_single, resolver.func.actions)
 
     def resolve_by_name(self, name, **kwargs):
         url = reverse(name, kwargs=kwargs)
