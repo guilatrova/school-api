@@ -146,3 +146,9 @@ class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Quiz.objects.count(), 2)
+
+    def test_api_retrieve_quiz(self):
+        response = self.client.get(reverse('quiz', kwargs={'pk': self.quiz.id}), format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
