@@ -26,7 +26,7 @@ class StudentUrlsTestCase(UrlTestMixin, TestCase):
         self.assertEqual(resolver.func.cls, quizzes_views.StudentAssignmentsViewSet)
 
     def test_assignments_list_url_allows(self):
-        resolver = self.resolve_by_name('student-classes', student_id=1)
+        resolver = self.resolve_by_name('student-assignments', student_id=1)
         allowed = ['get', 'post']
         self.assert_has_actions(allowed, resolver.func.actions)
 
