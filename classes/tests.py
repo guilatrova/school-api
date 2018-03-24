@@ -7,7 +7,7 @@ from classes import views, serializers
 from classes.models import SchoolClass
 from common.tests.mixins import UrlTestMixin, ApiTestMixin
 
-class ClassesUrlsTestCase(UrlTestMixin, TestCase):
+class SchoolClassUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'classes'
     single_name = 'class'
     view = views.SchoolClassViewSet
@@ -17,13 +17,13 @@ class SetupTeacherDataMixin:
     def setUpTestData(cls):
         cls.teacher = Teacher.objects.create(name='Guilherme Latrova')
 
-class ClassSerializerTestCase(SetupTeacherDataMixin, TestCase):
+class SchoolClassSerializerTestCase(SetupTeacherDataMixin, TestCase):
     def test_serializer_validates(self):
         data = { 'name': 'Python with TDD', 'teacher': self.teacher.id }
         serializer = serializers.SchoolClassSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
-class ClassEnrollmentSerializerTestCase(SetupTeacherDataMixin, TestCase):
+class StudentEnrollmentSerializerTestCase(SetupTeacherDataMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
@@ -31,8 +31,8 @@ class ClassEnrollmentSerializerTestCase(SetupTeacherDataMixin, TestCase):
         cls.student = Student.objects.create(name='Jhon Doe')
 
     def test_serializer_validates(self):
-        data = { 'class': self.school_SchoolClass.id, 'student': self.student.id }
-        serializer = serializers.ClassEnrollmentSerializer(data=data)
+        data = { 'school_class': self.school_class.id, 'student': self.student.id }
+        serializer = serializers.StudentEnrollmentSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
 class ClassApiIntegrationTestCase(SetupTeacherDataMixin, ApiTestMixin, APITestCase):
