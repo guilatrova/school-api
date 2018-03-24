@@ -18,6 +18,7 @@ class AssignmentUrlsTestCase(UrlTestMixin, TestCase):
     single_name = 'assignment'
     allowed_single = ['get']
     allowed_list = ['get']
+    view = views.AssignmentViewSet
 
 class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):

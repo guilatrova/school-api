@@ -15,3 +15,6 @@ class StudentAssignmentsViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         return Assignment.objects.filter(enrollment__student_id=self.kwargs['student_id'])
+
+class AssignmentViewSet(viewsets.ModelViewSet):
+    pass
