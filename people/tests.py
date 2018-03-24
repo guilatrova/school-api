@@ -15,6 +15,11 @@ class StudentUrlsTestCase(UrlTestMixin, TestCase):
         resolver = self.resolve_by_name('student-classes', pk=1)
         self.assertEqual(resolver.func.cls, classes_views.StudentClassesViewSet)
 
+    def test_classes_list_url_allows(self):
+        resolver = self.resolve_by_name('student-classes', pk=1)
+        allowed = ['get', 'post']
+        self.assert_has_actions(allowed, resolver.func.actions)
+
 class TeacherUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'teachers'
     single_name = 'teacher'
