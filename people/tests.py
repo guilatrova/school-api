@@ -33,6 +33,15 @@ class StudentUrlsTestCase(TestCase):
         for action in expected:
             self.assertIn(action, actual)
 
+class TeacherUrlsTestCase(TestCase):
+    def test_resolves_teachers_url(self):
+        resolver = self.resolve_by_name('teachers')
+        self.assertEqual(resolver.func.cls, views.StudentViewSet)
+
+    def resolve_by_name(self, name, **kwargs):
+        url = reverse(name, kwargs=kwargs)
+        return resolve(url)
+
 class StudentSerializerTestCase(TestCase):
     def test_serializer_validates(self):
         data = { 'name': 'Jhon Doe' }
