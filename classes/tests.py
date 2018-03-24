@@ -11,21 +11,18 @@ class ClassesUrlsTestCase(UrlTestMixin, TestCase):
     single_name = 'class'
     view = views.ClassViewSet
 
-class ClassSerializerTestCase(TestCase):
+class SetupTeacherDataMixin:
     @classmethod
     def setUpTestData(cls):
         cls.teacher = Teacher.objects.create(name='Guilherme Latrova')
 
+class ClassSerializerTestCase(SetupTeacherDataMixin, TestCase):
     def test_serializer_validates(self):
         data = { 'name': 'Python with TDD', 'teacher': self.teacher.id }
         serializer = serializers.ClassSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
-class ClassApiIntegrationTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.teacher = Teacher.objects.create(name='Guilherme Latrova')
-
+class ClassApiIntegrationTestCase(SetupTeacherDataMixin, TestCase):
     def test_creates_class(self):
         data = { 'name': 'Python with TDD', 'teacher': self.teacher.id }
 
