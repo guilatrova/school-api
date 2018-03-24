@@ -86,4 +86,4 @@ class AssignmentApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
         response = self.client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data['id'], self.assignment.id)

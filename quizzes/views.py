@@ -17,4 +17,5 @@ class StudentAssignmentsViewSet(viewsets.ModelViewSet):
         return Assignment.objects.filter(enrollment__student_id=self.kwargs['student_id'])
 
 class AssignmentViewSet(viewsets.ModelViewSet):
-    pass
+    serializer_class = AssignmentSerializer
+    queryset = Assignment.objects.all()
