@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from unittest.mock import patch, MagicMock
 from quizzes import views, serializers, factories
-from quizzes.models import Quiz, Question, Answer
+from quizzes.models import Quiz, Question, Answer, Assignment
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
 from common.tests.mixins import UrlTestMixin
@@ -170,3 +170,23 @@ class QuizApiIntegrationTestCase(SetupSchoolClassDataMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+class AssignmentApiTestCase(SetupSchoolClassDataMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.student = Student.objects.create(name='Jhon Doe')
+        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
+        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
+
+    def test_api_creates_assignment(self):
+        data = {
+            'quiz': self.quiz.id,
+            'enrollment': self.enrollment.id
+        }
+        url = reverse('student-assignments', kwargs={'student_id': self.student.id})
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Assignment.objects.count(), 1)
