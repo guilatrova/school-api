@@ -55,5 +55,20 @@ class ClassApiIntegrationTestCase(SetupTeacherDataMixin, ApiTestMixin, APITestCa
     def update_data(self):
         return { 'id': self.pre_created_entity.id, 'name': 'Changed', 'teacher': self.teacher.id }
 
-class StudentClassesApiIntegrationTestCase(ApiTestMixin, APITestCase):
-    pass
+class StudentClassesApiIntegrationTestCase(SetupTeacherDataMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.school_class = SchoolClass.objects.create(name='class', teacher=cls.teacher)
+        cls.student = Student.objects.create(name='Jhon Doe')
+        cls.enrollment = StudentEnrollment(student=cls.student, school_class=cls.school_class)
+
+    def test_creates_enrollment(self):
+        data = { 'student': self.student.id, 'school_class': self.school_class.id }
+        url = reverse('student-classes', kwargs={'pk': self.student.id})
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(StudentEnrollment.objects.count(), 1)
+
