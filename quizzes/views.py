@@ -6,3 +6,6 @@ from .models import Quiz
 class QuizViewSet(viewsets.ModelViewSet): #Refactor to only LIST, CREATE, RETRIEVE
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
+
+class StudentAssignmentsViewSet(viewsets.ModelViewSet):
+    pass
