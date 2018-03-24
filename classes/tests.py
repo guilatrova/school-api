@@ -63,22 +63,22 @@ class StudentClassesApiIntegrationTestCase(SetupTeacherDataMixin, APITestCase):
         cls.student = Student.objects.create(name='Jhon Doe')
         cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
         
-        other_student = Student.objects.create(name='Mary Doe')
-        enrollment = StudentEnrollment(student=other_student, school_class=cls.school_class) #To make sure it only lists current student classes
+        other_student = Student.objects.create(name='Mary Doe') #To make sure it only lists current student classes
+        enrollment = StudentEnrollment(student=other_student, school_class=cls.school_class)
+
+    def setUp(self):
+        self.url = reverse('student-classes', kwargs={'pk': self.student.id})
 
     def test_creates_enrollment(self):
         data = { 'student': self.student.id, 'school_class': self.school_class.id }
-        url = reverse('student-classes', kwargs={'pk': self.student.id})
 
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(self.url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(StudentEnrollment.objects.count(), 2)
 
     def test_lists_student_enrollments(self):
-        url = reverse('student-classes', kwargs={'pk': self.student.id})
-
-        response = self.client.get(url, format='json')
+        response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
