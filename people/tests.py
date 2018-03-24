@@ -49,6 +49,12 @@ class StudentSerializerTestCase(TestCase):
         serializer = serializers.StudentSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
+class TestSerializerTestCase(TestCase):
+    def test_serializer_validates(self):
+        data = { 'name': 'Anakin Skywalker' }
+        serializer = serializers.TeacherSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
 class StudentApiIntegrationTestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
