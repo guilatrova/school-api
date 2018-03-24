@@ -10,7 +10,6 @@ class QuizUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'quizzes'
     single_name = 'quiz'
     allowed_single = ['get']
-    allowed_list = ['get', 'post']
     view = views.QuizViewSet
 
 class AssignmentUrlsTestCase(UrlTestMixin, TestCase):
@@ -19,6 +18,10 @@ class AssignmentUrlsTestCase(UrlTestMixin, TestCase):
     allowed_single = ['get']
     allowed_list = ['get']
     view = views.AssignmentViewSet
+
+# class SubmissionUrlsTestCase(UrlTestMixin, TestCase):
+#     list_name = 'assignment-submissions'
+#     allowed_list = ['get', 'post']
 
 class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):
