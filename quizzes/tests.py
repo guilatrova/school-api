@@ -1,6 +1,7 @@
 from django.test import TestCase
 from unittest.mock import patch, MagicMock
 from quizzes import views, serializers, factories
+from quizzes.models import Quiz, Question, Answer
 from people.models import Teacher
 from classes.models import SchoolClass
 from common.tests.mixins import UrlTestMixin
@@ -8,7 +9,7 @@ from common.tests.mixins import UrlTestMixin
 def create_question(answers):
     return {
         'description': 'question',
-        'correct_answer': 'D',
+        'correct_answer': 1,
         'answers': answers
     }
 
@@ -16,7 +17,7 @@ def create_answers(*args):
     lst = []
     for i in range(len(args)):
         description = args[i]
-        choice = chr(65 + i)
+        choice = i + 1
         lst.append({ 'choice': choice, 'description': description })
 
     return lst
@@ -28,7 +29,7 @@ class QuizUrlsTestCase(UrlTestMixin, TestCase):
 
 class AnswerSerializerTestCase(TestCase):
     def test_serializer_validates(self):
-        data = { 'choice': 'A', 'description': 'answer' }
+        data = { 'choice': 1, 'description': 'answer' }
         serializer = serializers.AnswerSerializer(data=data)
         self.assertTrue(serializer.is_valid(raise_exception=True))
 
