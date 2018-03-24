@@ -10,3 +10,5 @@ def create_quiz(validated_data):
 
         for answer_data in answers:
             Answer.objects.create(question=question, **answer_data)
+
+    return quiz

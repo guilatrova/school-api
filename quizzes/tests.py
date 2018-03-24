@@ -142,7 +142,7 @@ class QuizApiIntegrationTestCase(APITestCase):
             'questions': self.questions
         }
 
-        response = self.client.post(reverse('quizzes'), format='json')
+        response = self.client.post(reverse('quizzes'), data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Quiz.objects.count(), 1)
