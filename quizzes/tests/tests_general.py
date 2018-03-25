@@ -21,6 +21,7 @@ class AssignmentUrlsTestCase(UrlTestMixin, TestCase):
 
 class SubmissionUrlsTestCase(UrlListTestMixin, TestCase):
     list_name = 'assignment-submissions'
+    list_params = {'assignment_id': 1}
     allowed_list = ['get', 'post']
     view = views.SubmissionViewSet
 

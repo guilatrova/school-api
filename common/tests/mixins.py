@@ -24,13 +24,14 @@ class UrlSingleTestMixin(BaseUrlTestMixin):
 
 class UrlListTestMixin(BaseUrlTestMixin):
     allowed_list = ['get', 'post']
+    list_params = {}
 
     def test_resolves_list_url(self):
-        resolver = self.resolve_by_name(self.list_name)
+        resolver = self.resolve_by_name(self.list_name, **self.list_params)
         self.assertEqual(resolver.func.cls, self.view)
 
     def test_list_url_allows(self):
-        resolver = self.resolve_by_name(self.list_name)
+        resolver = self.resolve_by_name(self.list_name, **self.list_params)
         self.assert_has_actions(self.allowed_list, resolver.func.actions)
 
 class UrlTestMixin(UrlSingleTestMixin, UrlListTestMixin):

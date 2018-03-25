@@ -19,3 +19,6 @@ class StudentAssignmentsViewSet(viewsets.ModelViewSet):
 class AssignmentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AssignmentSerializer
     queryset = Assignment.objects.all()
+
+class SubmissionViewSet(viewsets.ModelViewSet):
+    pass
