@@ -6,6 +6,6 @@ class GradeService:
         if Submission.objects.filter(assignment_id=assignment_id).exists():
             status = Assignment.IN_PROGRESS
 
-        assignment = Assignment.objects.get(pk=assignment_id)
-        assignment.status = status
-        assignment.save()
+        Assignment.objects\
+            .filter(pk=assignment_id)\
+            .update(status=status)
