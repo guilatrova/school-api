@@ -47,22 +47,23 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
 
     def test_service_without_any_submission_remains_pending(self):
         self.service.check(self.assignment)
-        self.assignment.refresh_from_db()
-        self.assertEqual(self.assignment.status, Assignment.PENDING)
+        self.assert_status(Assignment.PENDING)
 
     def test_service_updates_to_in_progress_when_any_submissions_is_made(self):
         Submission.objects.create(assignment=self.assignment, question=self.quiz.questions.first(), answer=1)
         self.service.check(self.assignment)
-        self.assignment.refresh_from_db()
-        self.assertEqual(self.assignment.status, Assignment.IN_PROGRESS)    
+        self.assert_status(Assignment.IN_PROGRESS)    
 
     def test_service_updates_to_completed_when_all_submisions_are_done(self):
-        questions = list(self.quiz.questions.all())
-        for question in questions:
+        for question in self.quiz.questions.all():
             Submission.objects.create(assignment=self.assignment, question=question, answer=1)
+
         self.service.check(self.assignment)
+        self.assert_status(Assignment.COMPLETED)
+
+    def assert_status(self, status):
         self.assignment.refresh_from_db()
-        self.assertEqual(self.assignment.status, Assignment.COMPLETED)    
+        self.assertEqual(self.assignment.status, status)
         
     #TODO calculates grade
     #TODO cant submit same question twice
