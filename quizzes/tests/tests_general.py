@@ -90,3 +90,20 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
     def assert_grade(self, grade):
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.grade, grade)
+
+class GradeFactoryServiceTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.teacher = Teacher.objects.create(name='Kwan Lee')
+        SchoolClass.objects.create(name='Managing great companies', teacher=cls.teacher)
+        SchoolClass.objects.create(name='How to achieve greatness', teacher=cls.teacher)
+
+    def test_service_generates_report_aggregated_by_student(self):
+        factory = factories.GradeByClassReport(self.teacher.id)
+        report = factory.generate()
+        
+        self.assertEqual(len(report), 2)
+        self.assertIn('Managing great companies', report)
+        self.assertIn('How to achieve greatness', report)
+
+
