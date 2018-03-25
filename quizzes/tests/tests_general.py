@@ -133,4 +133,9 @@ class GradeFactoryServiceTestCase(TestCase):
         self.assertIn(self.student2.name, self.report[self.class1.name])
 
     def test_generates_report_with_sum_grade_inside_students(self):
-        pass
+        class1 = self.report[self.class1.name]
+        class2 = self.report[self.class2.name]
+
+        self.assertEqual(class1[self.student1.name], 9)
+        self.assertEqual(class1[self.student2.name], 6)
+        self.assertEqual(class2[self.student1.name], 9)

@@ -1,4 +1,4 @@
-from django.db.models import F
+from django.db.models import F, Sum
 from itertools import groupby
 from .models import Quiz, Question, Answer, Assignment
 from classes.models import SchoolClass, StudentEnrollment
@@ -30,7 +30,8 @@ class GradeByClassReport:
                     .values('studentenrollment')\
                     .annotate(
                         class_name=F('studentenrollment__school_class__name'),
-                        student_name=F('studentenrollment__student__name')
+                        student_name=F('studentenrollment__student__name'),
+                        grade=Sum('studentenrollment__assignment__grade')
                     )\
                     .order_by('class_name')
 
@@ -43,6 +44,6 @@ class GradeByClassReport:
         for school_class in class_group:
             result[school_class] = {}
             for student in class_group[school_class]:
-                result[school_class][student['student_name']] = {}
+                result[school_class][student['student_name']] = student['grade']
 
         return result
