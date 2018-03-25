@@ -94,7 +94,7 @@ class SubmissionApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
         Submission.objects.create(assignment=other_assignment, question=other_quiz.questions.first(), answer=1)
 
     def test_api_creates_submission(self):
-        data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
+        data = { 'question': self.quiz.questions.last().id, 'answer': 1 }
         url = reverse('assignment-submissions', kwargs={'assignment_id': self.assignment.id})
 
         response = self.client.post(url, data, format='json')

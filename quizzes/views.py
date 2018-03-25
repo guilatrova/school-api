@@ -26,5 +26,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Submission.objects.filter(assignment_id=self.kwargs['assignment_id'])
 
+    def get_serializer_context(self):
+        return { 'assignment_id': self.kwargs['assignment_id'] }
+
     def perform_create(self, serializer):
         serializer.save(assignment_id=self.kwargs['assignment_id'])

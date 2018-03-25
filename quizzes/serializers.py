@@ -48,13 +48,19 @@ class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         fields = ('id', 'quiz', 'enrollment', 'status', 'grade')
-        read_only_fields = ('id', 'status', 'grade')
+        read_only_fields = ('id', 'status', 'grade')        
 
 class SubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
         fields = ('id', 'question', 'assignment', 'answer')
         read_only_fields = ('id', 'assignment')
+
+    def validate_question(self, question):
+        if Submission.objects.filter(question=question, assignment_id=self.context['assignment_id']).exists():
+            raise serializers.ValidationError("Can't submit same question")
+
+        return question
 
     def create(self, validated_data):
         result = super().create(validated_data)

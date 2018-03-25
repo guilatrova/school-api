@@ -95,9 +95,12 @@ class AssignmentSerializerTestCase(SetupStudentEnrollmentDataMixin, SetupQuizDat
         self.assertIn('status', data)
 
 class SubmissionSerializerTestCase(SetupAssignmentDataMixin, TestCase):
+    def setUp(self):
+        self.context = { 'assignment_id': self.assignment.id }
+
     def test_serializer_validates(self):
         data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
-        serializer = serializers.SubmissionSerializer(data=data)
+        serializer = serializers.SubmissionSerializer(data=data, context=self.context)
         self.assertTrue(serializer.is_valid(raise_exception=True))
 
     def test_serializer_validates_should_not_allows_duplicates(self):
@@ -105,16 +108,16 @@ class SubmissionSerializerTestCase(SetupAssignmentDataMixin, TestCase):
         Submission.objects.create(assignment=self.assignment, question=question, answer=1)
         data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
 
-        serializer = serializers.SubmissionSerializer(data=data)
+        serializer = serializers.SubmissionSerializer(data=data, context=self.context)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('non_field_errors', serializer.errors)
+        self.assertIn('question', serializer.errors)
 
     #TODO: Questions should belong to assignment
 
     @patch('quizzes.services.GradeService.check')
     def test_serializer_creates_calls_grade_service(self, mock):
         data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
-        serializer = serializers.SubmissionSerializer(data=data)
+        serializer = serializers.SubmissionSerializer(data=data, context=self.context)
         serializer.is_valid(raise_exception=True)
         serializer.save(assignment_id=self.assignment.id)
 
