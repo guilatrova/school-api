@@ -3,7 +3,7 @@ from quizzes import views, serializers, factories, services
 from quizzes.models import Quiz, Question, Answer, Assignment, Submission
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
-from common.tests.mixins import UrlTestMixin, UrlListTestMixin
+from common.tests.mixins import UrlTestMixin, UrlListTestMixin, BaseUrlTest
 from .helpers import SetupSchoolClassDataMixin, SetupAssignmentDataMixin, create_questions, create_question, create_answers
 
 class QuizUrlsTestCase(UrlTestMixin, TestCase):
@@ -25,10 +25,10 @@ class SubmissionUrlsTestCase(UrlListTestMixin, TestCase):
     allowed_list = ['get', 'post']
     view = views.SubmissionViewSet
 
-class ReportUrlsTestCase(UrlListTestMixin, TestCase):
-    list_name = 'grades-report'
-    allowed_list = ['get']
-    view = views.GradeReportAPIView
+class ReportUrlsTestCase(BaseUrlTest, TestCase):
+    def test_resolves_list_url(self):
+        resolver = self.resolve_by_name('student-grades-report')
+        self.assertEqual(resolver.func.cls, views.get_grade_report.cls)
 
 class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):

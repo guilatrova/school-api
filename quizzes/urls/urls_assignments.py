@@ -9,4 +9,5 @@ urlpatterns = [
     path('', views.AssignmentViewSet.as_view(list_actions), name='assignments'),
     path('<int:pk>/', views.AssignmentViewSet.as_view(single_actions), name='assignment'),
     path('<int:assignment_id>/submissions/', views.SubmissionViewSet.as_view(submission_actions), name='assignment-submissions'),
+    path('reports/student-grades/', views.get_grade_report, name='student-grades-report')
 ]

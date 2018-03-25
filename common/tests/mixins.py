@@ -1,7 +1,7 @@
 from django.urls import reverse, resolve
 from rest_framework import status
 
-class BaseUrlTestMixin:
+class BaseUrlTest:
     def resolve_by_name(self, name, **kwargs):
         url = reverse(name, kwargs=kwargs)
         return resolve(url)
@@ -11,7 +11,7 @@ class BaseUrlTestMixin:
         for action in expected:
             self.assertIn(action, actual)
 
-class UrlSingleTestMixin(BaseUrlTestMixin):
+class UrlSingleTestMixin(BaseUrlTest):
     allowed_single = ['get', 'put', 'delete']
 
     def test_resolves_single_url(self):
@@ -22,7 +22,7 @@ class UrlSingleTestMixin(BaseUrlTestMixin):
         resolver = self.resolve_by_name(self.single_name, pk=1)
         self.assert_has_actions(self.allowed_single, resolver.func.actions)
 
-class UrlListTestMixin(BaseUrlTestMixin):
+class UrlListTestMixin(BaseUrlTest):
     allowed_list = ['get', 'post']
     list_params = {}
 
