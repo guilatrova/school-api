@@ -65,7 +65,7 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
         question = self.quiz.questions.first()
         Submission.objects.create(assignment=self.assignment, question=question, answer=question.correct_answer)
         self.service.check(self.assignment)
-        self.assertEqual(self.assignment.grade, 0)
+        self.assert_grade(0)
 
     def test_service_calculates_grade(self):
         questions = self.quiz.questions.all()
@@ -76,12 +76,16 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
             Submission.objects.create(assignment=self.assignment, question=question, answer=invalid_answer)
 
         self.service.check(self.assignment)
-        self.assertEqual(self.assignment.grade, 2)
+        self.assert_grade(2)
 
     def assert_status(self, status):
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.status, status)
-        
+
+    def assert_grade(self, grade):
+        self.assignment.refresh_from_db()
+        self.assertEqual(self.assignment.grade, grade)
+
     #TODO calculates grade
     #TODO cant submit same question twice
     #TODO serializer returns grade + status
