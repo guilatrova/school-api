@@ -94,11 +94,19 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
 class GradeFactoryServiceTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
+        #people
         cls.teacher = Teacher.objects.create(name='Kwan Lee')
-        SchoolClass.objects.create(name='Managing great companies', teacher=cls.teacher)
-        SchoolClass.objects.create(name='How to achieve greatness', teacher=cls.teacher)
+        cls.student1 = Student.objects.create(name='Guilherme Latrova')
+        cls.student2 = Student.objects.create(name='John Doe')
+        #classes
+        cls.class1 = SchoolClass.objects.create(name='Managing great companies', teacher=cls.teacher)
+        cls.class2 = SchoolClass.objects.create(name='How to achieve greatness', teacher=cls.teacher)
+        #enrollment
+        StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class1)
+        StudentEnrollment.objects.create(student=cls.student2, school_class=cls.class1)
+        StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2)
 
-    def test_service_generates_report_groupped_by_teacher_classes(self):
+    def test_generates_report_grouped_by_teacher_classes(self):
         factory = factories.GradeByClassReport(self.teacher.id)
         report = factory.generate()
         
@@ -106,4 +114,12 @@ class GradeFactoryServiceTestCase(TestCase):
         self.assertIn('Managing great companies', report)
         self.assertIn('How to achieve greatness', report)
 
-
+    def test_generates_report_with_enrolled_students_inside_classes(self):
+        factory = factories.GradeByClassReport(self.teacher.id)
+        report = factory.generate()
+        
+        self.assertEqual(len(report[self.class1.name]), 2)
+        self.assertEqual(len(report[self.class2.name]), 1)
+        self.assertIn(self.student1.name, report[self.class1.name])
+        self.assertIn(self.student1.name, report[self.class2.name])
+        self.assertIn(self.student2.name, report[self.class1.name])
