@@ -1,7 +1,7 @@
 from django.test import TestCase
 from unittest.mock import patch, MagicMock
 from quizzes import serializers, factories
-from quizzes.models import Quiz, Question, Answer, Assignment
+from quizzes.models import Quiz, Question, Answer, Assignment, Submission
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
 from .helpers import (
@@ -99,6 +99,17 @@ class SubmissionSerializerTestCase(SetupAssignmentDataMixin, TestCase):
         data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
         serializer = serializers.SubmissionSerializer(data=data)
         self.assertTrue(serializer.is_valid(raise_exception=True))
+
+    def test_serializer_validates_should_not_allows_duplicates(self):
+        question = self.quiz.questions.first()
+        Submission.objects.create(assignment=self.assignment, question=question, answer=1)
+        data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
+
+        serializer = serializers.SubmissionSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('non_field_errors', serializer.errors)
+
+    #TODO: Questions should belong to assignment
 
     @patch('quizzes.services.GradeService.check')
     def test_serializer_creates_calls_grade_service(self, mock):

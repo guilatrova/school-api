@@ -85,6 +85,3 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
     def assert_grade(self, grade):
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.grade, grade)
-
-    #TODO cant submit same question twice
-    #TODO serializer returns grade + status
