@@ -86,6 +86,5 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.grade, grade)
 
-    #TODO calculates grade
     #TODO cant submit same question twice
     #TODO serializer returns grade + status
