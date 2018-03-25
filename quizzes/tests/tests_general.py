@@ -1,10 +1,10 @@
 from django.test import TestCase
-from quizzes import views, serializers, factories
-from quizzes.models import Quiz, Question, Answer, Assignment
+from quizzes import views, serializers, factories, services
+from quizzes.models import Quiz, Question, Answer, Assignment, Submission
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
 from common.tests.mixins import UrlTestMixin, UrlListTestMixin
-from .helpers import SetupSchoolClassDataMixin, create_questions, create_question, create_answers
+from .helpers import SetupSchoolClassDataMixin, SetupAssignmentDataMixin, create_questions, create_question, create_answers
 
 class QuizUrlsTestCase(UrlTestMixin, TestCase):
     list_name = 'quizzes'
@@ -41,3 +41,12 @@ class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
         self.assertEqual(Question.objects.count(), 3)
         self.assertEqual(Quiz.objects.count(), 1)
 
+class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
+    def setUp(self):
+        self.service = services.GradeService()
+
+    def test_service_updates_status_to_in_progress_when_any_submissions_is_made(self):
+        Submission.objects.create(assignment=self.assignment, question=self.quiz.questions.first(), answer=1)
+        self.service.check(self.assignment.id)
+        self.assignment.refresh_from_db()
+        self.assertEqual(self.assignment.status, Assignment.IN_PROGRESS)
