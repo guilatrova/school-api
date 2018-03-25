@@ -54,7 +54,7 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
         self.service.check(self.assignment)
         self.assert_status(Assignment.IN_PROGRESS)    
 
-    def test_service_updates_to_completed_when_all_submisions_are_done(self):
+    def test_service_updates_to_completed_when_all_submissions_are_made(self):
         for question in self.quiz.questions.all():
             Submission.objects.create(assignment=self.assignment, question=question, answer=1)
 
