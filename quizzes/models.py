@@ -8,6 +8,14 @@ class HasAnswerChoices:
         (4, 'D'),
     )
 
+class Submission(models.Model, HasAnswerChoices):
+    """
+    Represents an answer for an assignment's question provided by user
+    """
+    assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    answer = models.PositiveSmallIntegerField(choices=HasAnswerChoices.ANSWER_CHOICES)
+
 class Assignment(models.Model):
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)
     enrollment = models.ForeignKey('classes.StudentEnrollment', on_delete=models.CASCADE)

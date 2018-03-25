@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from quizzes import factories
-from .models import Answer, Question, Quiz, Assignment
+from .models import Answer, Question, Quiz, Assignment, Submission
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +47,9 @@ class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
         fields = ('id', 'quiz', 'enrollment')
+
+class SubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = ('id', 'question', 'assignment', 'answer')
+        read_only_fields = ('id', 'assignment')
