@@ -82,3 +82,13 @@ class AssignmentApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+class SubmissionApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
+    def test_api_creates_submission(self):
+        data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
+        url = reverse('assignment-submissions', kwargs={'assignment_id': self.assignment.id})
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(len(response.data), 1)
