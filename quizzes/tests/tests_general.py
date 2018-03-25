@@ -46,13 +46,13 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
         self.service = services.GradeService()
 
     def test_service_without_any_submission_remains_pending(self):
-        self.service.check(self.assignment.id)
+        self.service.check(self.assignment)
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.status, Assignment.PENDING)
 
     def test_service_updates_to_in_progress_when_any_submissions_is_made(self):
         Submission.objects.create(assignment=self.assignment, question=self.quiz.questions.first(), answer=1)
-        self.service.check(self.assignment.id)
+        self.service.check(self.assignment)
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.status, Assignment.IN_PROGRESS)    
 
@@ -60,6 +60,7 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
         questions = list(self.quiz.questions.all())
         for question in questions:
             Submission.objects.create(assignment=self.assignment, question=question, answer=1)
+        self.service.check(self.assignment)
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.status, Assignment.COMPLETED)    
         

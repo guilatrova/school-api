@@ -1,11 +1,15 @@
-from .models import Assignment, Submission
+from .models import Assignment, Submission, Quiz
 
 class GradeService:
-    def check(self, assignment_id):
+    def check(self, assignment):
         status = Assignment.PENDING
-        if Submission.objects.filter(assignment_id=assignment_id).exists():
+        submissions_made = Submission.objects.filter(assignment=assignment).count()
+
+        if submissions_made > 0:
             status = Assignment.IN_PROGRESS
 
-        Assignment.objects\
-            .filter(pk=assignment_id)\
-            .update(status=status)
+            if submissions_made == assignment.quiz.questions.count():
+                status = Assignment.COMPLETED
+
+        assignment.status = status
+        assignment.save()

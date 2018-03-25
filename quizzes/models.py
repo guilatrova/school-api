@@ -19,9 +19,11 @@ class Submission(models.Model, HasAnswerChoices):
 class Assignment(models.Model):
     PENDING = 'P'
     IN_PROGRESS = 'IP'
+    COMPLETED = 'C'
     STATUS_CHOICES = (
         (PENDING, 'PENDING'),
-        (IN_PROGRESS, 'IN PROGRESS')
+        (IN_PROGRESS, 'IN PROGRESS'),
+        (COMPLETED, 'COMPLETED')
     )
 
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)

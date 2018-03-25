@@ -57,5 +57,5 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         result = super().create(validated_data)
-        GradeService().check(validated_data['assignment_id']) #TODO: Refactor this
+        GradeService().check(Assignment.objects.get(pk=validated_data['assignment_id'])) #TODO: Refactor this
         return result

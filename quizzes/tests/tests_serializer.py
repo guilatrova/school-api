@@ -101,4 +101,4 @@ class SubmissionSerializerTestCase(SetupAssignmentDataMixin, TestCase):
         serializer.is_valid(raise_exception=True)
         serializer.save(assignment_id=self.assignment.id)
 
-        mock.assert_called_with(self.assignment.id)
+        mock.assert_called_with(self.assignment)
