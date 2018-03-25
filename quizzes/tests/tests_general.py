@@ -25,6 +25,11 @@ class SubmissionUrlsTestCase(UrlListTestMixin, TestCase):
     allowed_list = ['get', 'post']
     view = views.SubmissionViewSet
 
+class ReportUrlsTestCase(UrlListTestMixin, TestCase):
+    list_name = 'grades-report'
+    allowed_list = ['get']
+    view = views.GradeReportAPIView
+
 class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):
         answers = create_answers('A', 'B', 'C', 'D')
