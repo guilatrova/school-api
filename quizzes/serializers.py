@@ -47,7 +47,8 @@ class QuizSerializer(serializers.ModelSerializer):
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
-        fields = ('id', 'quiz', 'enrollment')
+        fields = ('id', 'quiz', 'enrollment', 'status', 'grade')
+        read_only_fields = ('id', 'status', 'grade')
 
 class SubmissionSerializer(serializers.ModelSerializer):
     class Meta:
