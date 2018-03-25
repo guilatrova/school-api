@@ -57,7 +57,11 @@ class SubmissionSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'assignment')
 
     def validate_question(self, question):
-        if Submission.objects.filter(question=question, assignment_id=self.context['assignment_id']).exists():
+        assignment = Assignment.objects.get(pk=self.context['assignment_id'])
+        if question.quiz != assignment.quiz:
+            raise serializers.ValidationError("Can't submit question to invalid assignment")
+
+        if Submission.objects.filter(question=question, assignment=assignment).exists():
             raise serializers.ValidationError("Can't submit same question")
 
         return question
