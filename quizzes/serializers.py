@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from quizzes import factories
 from .models import Answer, Question, Quiz, Assignment, Submission
+from .services import GradeService
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,3 +54,8 @@ class SubmissionSerializer(serializers.ModelSerializer):
         model = Submission
         fields = ('id', 'question', 'assignment', 'answer')
         read_only_fields = ('id', 'assignment')
+
+    def create(self, validated_data):
+        result = super().create(validated_data)
+        GradeService().check(validated_data['assignment_id']) #TODO: Refactor this
+        return result
