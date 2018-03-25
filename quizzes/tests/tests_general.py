@@ -98,7 +98,8 @@ class GradeFactoryServiceTestCase(TestCase):
         SchoolClass.objects.create(name='Managing great companies', teacher=cls.teacher)
         SchoolClass.objects.create(name='How to achieve greatness', teacher=cls.teacher)
 
-    def test_service_generates_report_aggregated_by_student(self):
+
+    def test_service_generates_report_groupped_by_teacher_classes(self):
         factory = factories.GradeByClassReport(self.teacher.id)
         report = factory.generate()
         
