@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from quizzes.models import Quiz, Question, Answer, Assignment
+from quizzes.models import Quiz, Question, Answer, Assignment, Submission
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
 from quizzes import factories
@@ -91,4 +91,4 @@ class SubmissionApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(Submission.objects.count(), 1)

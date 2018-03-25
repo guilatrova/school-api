@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, mixins
-from .serializers import QuizSerializer, AssignmentSerializer
+from .serializers import QuizSerializer, AssignmentSerializer, SubmissionSerializer
 from .models import Quiz, Assignment
 
 class QuizViewSet(mixins.CreateModelMixin, 
@@ -21,4 +21,7 @@ class AssignmentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Assignment.objects.all()
 
 class SubmissionViewSet(viewsets.ModelViewSet):
-    pass
+    serializer_class = SubmissionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(assignment_id=self.kwargs['assignment_id'])
