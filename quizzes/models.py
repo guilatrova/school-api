@@ -17,8 +17,16 @@ class Submission(models.Model, HasAnswerChoices):
     answer = models.PositiveSmallIntegerField(choices=HasAnswerChoices.ANSWER_CHOICES)
 
 class Assignment(models.Model):
+    PENDING = 'P'
+    IN_PROGRESS = 'IP'
+    STATUS_CHOICES = (
+        (PENDING, 'PENDING'),
+        (IN_PROGRESS, 'IN PROGRESS')
+    )
+
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)
     enrollment = models.ForeignKey('classes.StudentEnrollment', on_delete=models.CASCADE)
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=PENDING)
 
 class Quiz(models.Model):
     school_class = models.ForeignKey('classes.SchoolClass', on_delete=models.PROTECT)    
