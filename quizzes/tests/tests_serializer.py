@@ -86,3 +86,18 @@ class AssignmentSerializerTestCase(SetupSchoolClassDataMixin, TestCase):
         data = { 'quiz': self.quiz.id, 'enrollment': self.enrollment.id }
         serializer = serializers.AssignmentSerializer(data=data)
         self.assertTrue(serializer.is_valid(raise_exception=True))
+
+class SubmissionSerializerTestCase(SetupSchoolClassDataMixin, TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        student = Student.objects.create(name='Jhon Doe')
+        cls.questions = create_questions(2)
+        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': cls.questions })
+        cls.enrollment = StudentEnrollment.objects.create(student=student, school_class=cls.school_class)
+        cls.assignment = Assignment.objects.create(quiz=cls.quiz, enrollment=cls.enrollment)
+
+    def test_serializer_validates(self):
+        data = { 'assignment': self.assignment.id, 'question': self.quiz.questions.first().id, 'answer': 1 }
+        serializer = serializers.SubmissionSerializer(data=data)
+        self.assertTrue(serializer.is_valid(raise_exception=True))
