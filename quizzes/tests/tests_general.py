@@ -3,7 +3,7 @@ from quizzes import views, serializers, factories
 from quizzes.models import Quiz, Question, Answer, Assignment
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
-from common.tests.mixins import UrlTestMixin
+from common.tests.mixins import UrlTestMixin, UrlListTestMixin
 from .helpers import SetupSchoolClassDataMixin, create_questions, create_question, create_answers
 
 class QuizUrlsTestCase(UrlTestMixin, TestCase):
@@ -19,9 +19,10 @@ class AssignmentUrlsTestCase(UrlTestMixin, TestCase):
     allowed_list = ['get']
     view = views.AssignmentViewSet
 
-# class SubmissionUrlsTestCase(UrlTestMixin, TestCase):
-#     list_name = 'assignment-submissions'
-#     allowed_list = ['get', 'post']
+class SubmissionUrlsTestCase(UrlListTestMixin, TestCase):
+    list_name = 'assignment-submissions'
+    allowed_list = ['get', 'post']
+    view = views.SubmissionViewSet
 
 class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
     def setUp(self):
