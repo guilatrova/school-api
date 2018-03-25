@@ -88,6 +88,12 @@ class AssignmentSerializerTestCase(SetupStudentEnrollmentDataMixin, SetupQuizDat
         serializer = serializers.AssignmentSerializer(data=data)
         self.assertTrue(serializer.is_valid(raise_exception=True))
 
+    def test_serializer_returns_status_and_grade(self):
+        serializer = serializers.AssignmentSerializer(MagicMock())
+        data = serializer.data
+        self.assertIn('grade', data)
+        self.assertIn('status', data)
+
 class SubmissionSerializerTestCase(SetupAssignmentDataMixin, TestCase):
     def test_serializer_validates(self):
         data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
