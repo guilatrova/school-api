@@ -67,6 +67,17 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
         self.service.check(self.assignment)
         self.assertEqual(self.assignment.grade, 0)
 
+    def test_service_calculates_grade(self):
+        questions = self.quiz.questions.all()
+        for question in questions[:2]:
+            Submission.objects.create(assignment=self.assignment, question=question, answer=question.correct_answer)
+        for question in questions[2:]:
+            invalid_answer = question.correct_answer-1
+            Submission.objects.create(assignment=self.assignment, question=question, answer=invalid_answer)
+
+        self.service.check(self.assignment)
+        self.assertEqual(self.assignment.grade, 2)
+
     def assert_status(self, status):
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.status, status)

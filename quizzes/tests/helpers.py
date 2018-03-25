@@ -13,7 +13,7 @@ class SetupQuizDataMixin(SetupSchoolClassDataMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
+        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(4) })
 
 class SetupStudentEnrollmentDataMixin:
     @classmethod
