@@ -5,13 +5,11 @@ from quizzes.models import Quiz, Question, Answer, Assignment
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
 from quizzes import factories
-from .helpers import SetupSchoolClassDataMixin, create_questions
-
-class SetupQuizDataMixin(SetupSchoolClassDataMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(2) })
+from .helpers import (
+    SetupQuizDataMixin,
+    SetupAssignmentDataMixin,
+    create_questions
+)
 
 class QuizApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
     def setUp(self):
@@ -40,14 +38,10 @@ class QuizApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
-class StudentAssignmentApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
+class StudentAssignmentApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        cls.student = Student.objects.create(name='Jhon Doe')
-        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
-        cls.assignment = Assignment.objects.create(quiz=cls.quiz, enrollment=cls.enrollment)
-
         other_student = Student.objects.create(name='Mary Doe') #Make sure only student's assignments are handled
         other_enrollment = StudentEnrollment.objects.create(student=other_student, school_class=cls.school_class)
         Assignment.objects.create(quiz=cls.quiz, enrollment=other_enrollment)
@@ -72,14 +66,7 @@ class StudentAssignmentApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
-class AssignmentApiIntegrationTestCase(SetupQuizDataMixin, APITestCase):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.student = Student.objects.create(name='Jhon Doe')
-        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
-        cls.assignment = Assignment.objects.create(quiz=cls.quiz, enrollment=cls.enrollment)
-
+class AssignmentApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
     def test_api_retrieves_assignment(self):
         url = reverse('assignment', kwargs={'pk': self.assignment.id})
 
