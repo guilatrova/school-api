@@ -84,6 +84,15 @@ class AssignmentApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
         self.assertEqual(len(response.data), 1)
 
 class SubmissionApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        Submission.objects.create(assignment=cls.assignment, question=cls.quiz.questions.first(), answer=1)
+        #Make sure it only returns from specified assignment
+        other_quiz = factories.create_quiz({ 'school_class': cls.school_class, 'questions': create_questions(1) })
+        other_assignment = Assignment.objects.create(quiz=other_quiz, enrollment=cls.enrollment)
+        Submission.objects.create(assignment=other_assignment, question=other_quiz.questions.first(), answer=1)
+
     def test_api_creates_submission(self):
         data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
         url = reverse('assignment-submissions', kwargs={'assignment_id': self.assignment.id})
@@ -91,4 +100,12 @@ class SubmissionApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Submission.objects.count(), 1)
+        self.assertEqual(Submission.objects.count(), 3)
+
+    def test_api_lists_submission(self):
+        url = reverse('assignment-submissions', kwargs={'assignment_id': self.assignment.id})
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
