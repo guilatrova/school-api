@@ -12,4 +12,4 @@ class GradeService:
                 status = Assignment.COMPLETED
 
         assignment.status = status
-        assignment.save()
+        assignment.save()    

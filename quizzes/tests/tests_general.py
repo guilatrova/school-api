@@ -61,6 +61,12 @@ class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
         self.service.check(self.assignment)
         self.assert_status(Assignment.COMPLETED)
 
+    def test_service_only_calculates_grade_when_completed(self):        
+        question = self.quiz.questions.first()
+        Submission.objects.create(assignment=self.assignment, question=question, answer=question.correct_answer)
+        self.service.check(self.assignment)
+        self.assertEqual(self.assignment.grade, 0)
+
     def assert_status(self, status):
         self.assignment.refresh_from_db()
         self.assertEqual(self.assignment.status, status)
