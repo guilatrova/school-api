@@ -1,5 +1,7 @@
+from django.db.models import F
+from itertools import groupby
 from .models import Quiz, Question, Answer, Assignment
-from classes.models import SchoolClass
+from classes.models import SchoolClass, StudentEnrollment
 
 def create_quiz(validated_data):
     questions = validated_data.pop('questions')
@@ -23,12 +25,24 @@ class GradeByClassReport:
         return self._prep_data(data)     
 
     def _get_data(self):
-        return SchoolClass.objects.filter(
-            teacher=self.teacher_id
-        )
+        queryset = SchoolClass.objects.filter(teacher_id=self.teacher_id)
+        return queryset\
+                    .values('studentenrollment')\
+                    .annotate(
+                        class_name=F('studentenrollment__school_class__name'),
+                        student_name=F('studentenrollment__student__name')
+                    )\
+                    .order_by('class_name')
 
     def _prep_data(self, data):
-        lst = []
-        for entry in data:
-            lst.append(entry.name)
-        return lst
+        class_group = {}
+        for key, group in groupby(data, lambda x: x['class_name']):
+            class_group[key] = (list(group))
+
+        result = {}
+        for school_class in class_group:
+            result[school_class] = {}
+            for student in class_group[school_class]:
+                result[school_class][student['student_name']] = {}
+
+        return result
