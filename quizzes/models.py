@@ -29,6 +29,7 @@ class Assignment(models.Model):
     quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)
     enrollment = models.ForeignKey('classes.StudentEnrollment', on_delete=models.CASCADE)
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=PENDING)
+    grade = models.IntegerField(default=0)
 
 class Quiz(models.Model):
     school_class = models.ForeignKey('classes.SchoolClass', on_delete=models.PROTECT)    
