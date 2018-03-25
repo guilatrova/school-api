@@ -102,24 +102,35 @@ class GradeFactoryServiceTestCase(TestCase):
         cls.class1 = SchoolClass.objects.create(name='Managing great companies', teacher=cls.teacher)
         cls.class2 = SchoolClass.objects.create(name='How to achieve greatness', teacher=cls.teacher)
         #enrollment
-        StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class1)
-        StudentEnrollment.objects.create(student=cls.student2, school_class=cls.class1)
-        StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2)
+        student1_management = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class1)
+        student2_management = StudentEnrollment.objects.create(student=cls.student2, school_class=cls.class1)
+        student1_greatness = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2)
+        #quizzes
+        quiz1 = factories.create_quiz({ 'school_class': cls.class1, 'questions': create_questions(5) })
+        quiz2 = factories.create_quiz({ 'school_class': cls.class1, 'questions': create_questions(5) })
+        quiz3 = factories.create_quiz({ 'school_class': cls.class2, 'questions': create_questions(10)})
+        #assignments
+        Assignment.objects.create(quiz=quiz1, enrollment=student1_management, status=Assignment.COMPLETED, grade=4)
+        Assignment.objects.create(quiz=quiz2, enrollment=student1_management, status=Assignment.COMPLETED, grade=5)
+        Assignment.objects.create(quiz=quiz1, enrollment=student2_management, status=Assignment.COMPLETED, grade=3)
+        Assignment.objects.create(quiz=quiz2, enrollment=student2_management, status=Assignment.COMPLETED, grade=3)
+        Assignment.objects.create(quiz=quiz3, enrollment=student1_greatness, status=Assignment.COMPLETED, grade=9)
 
-    def test_generates_report_grouped_by_teacher_classes(self):
+    def setUp(self):
         factory = factories.GradeByClassReport(self.teacher.id)
-        report = factory.generate()
-        
-        self.assertEqual(len(report), 2)
-        self.assertIn('Managing great companies', report)
-        self.assertIn('How to achieve greatness', report)
+        self.report = factory.generate()
 
-    def test_generates_report_with_enrolled_students_inside_classes(self):
-        factory = factories.GradeByClassReport(self.teacher.id)
-        report = factory.generate()
-        
-        self.assertEqual(len(report[self.class1.name]), 2)
-        self.assertEqual(len(report[self.class2.name]), 1)
-        self.assertIn(self.student1.name, report[self.class1.name])
-        self.assertIn(self.student1.name, report[self.class2.name])
-        self.assertIn(self.student2.name, report[self.class1.name])
+    def test_generates_report_grouped_by_teacher_classes(self):                
+        self.assertEqual(len(self.report), 2)
+        self.assertIn('Managing great companies', self.report)
+        self.assertIn('How to achieve greatness', self.report)
+
+    def test_generates_report_with_enrolled_students_inside_classes(self):        
+        self.assertEqual(len(self.report[self.class1.name]), 2)
+        self.assertEqual(len(self.report[self.class2.name]), 1)
+        self.assertIn(self.student1.name, self.report[self.class1.name])
+        self.assertIn(self.student1.name, self.report[self.class2.name])
+        self.assertIn(self.student2.name, self.report[self.class1.name])
+
+    def test_generates_report_with_sum_grade_inside_students(self):
+        pass
