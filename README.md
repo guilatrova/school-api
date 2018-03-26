@@ -11,9 +11,23 @@ I chose to go with a rest API due reusability and scaling.
 >*Building RESTful web services, like other programming skills is **part art, part science**. As the Internet industry progresses, creating a REST API becomes more concrete with emerging best practices.*
 > -- <cite>**Todd Fredrich, REST API Expert**</cite>
 
+## Summary
+
+- Specifications
+    - [Assumptions](#assumptions)
+    - [Extended Assumptions](#extended-assumptions-for-our-api)
+- Techniques
+    - [TDD approach](#tdd-approach)
+    - [Refactoring](#refactoring)
+    - [Mocking & Integration tests](#mocking--integration-tests)
+- Code
+    - [Modules](#modules)
+    - [Models](#models)
+    - [API](#api)
+
 ---
 
-# Bussiness Assumptions
+# Assumptions
 
 - There are **Teachers**.
 - There are **Students**.
@@ -65,7 +79,7 @@ Things like:
 
 It was only mocked things that felt like it should. Django provides a very helpful testing database, so if we can generate great software with amazing tests using it, why not? 
 
-Some people calls it integration (since it handle database), but that's a ideological topic, at the end of the day you still have **fast** (less than a sec) **unit** (testing just a single part) **tests**.
+Some people calls it integration (since it handle database), but that's a ideological topic, at the end of the day you still have **fast** (some secs) **unit** (testing just a single part) **tests**.
 
 So, for this I'll consider as integration basically any API, signals, and some services tests
 
