@@ -128,4 +128,4 @@ class GradeReportApiTestCase(APITestCase):
         response = self.client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock.assert_called_with(1)
+        mock.assert_called_with('1')

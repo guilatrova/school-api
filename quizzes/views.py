@@ -36,6 +36,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         serializer.save(assignment_id=self.kwargs['assignment_id'])
 
 @api_view()
-def get_grade_report(request):    
-    data = factories.GradeByClassReport(None).generate()
+def get_grade_report(request):
+    teacher = request.GET.get('teacher')
+    data = factories.GradeByClassReport(teacher).generate()
     return Response(data)
