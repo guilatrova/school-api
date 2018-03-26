@@ -13,5 +13,8 @@ install:
 before_script:
   - psql -c 'create database ci_db;' -U postgres
 
-script: 
-  - python manage.py test
+script:
+  - coverage run --source=. manage.py test --noinput --settings=SchoolAPI.settings
+
+after_success:
+  - coveralls
