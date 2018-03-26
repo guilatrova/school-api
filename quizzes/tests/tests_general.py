@@ -1,3 +1,4 @@
+from datetime import date
 from django.test import TestCase
 from quizzes import views, serializers, factories, services
 from quizzes.models import Quiz, Question, Answer, Assignment, Submission
@@ -102,22 +103,25 @@ class GradeFactoryServiceTestCase(TestCase):
         cls.class1 = SchoolClass.objects.create(name='Managing great companies', teacher=cls.teacher)
         cls.class2 = SchoolClass.objects.create(name='How to achieve greatness', teacher=cls.teacher)
         #enrollment
-        student1_management = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class1)
-        student2_management = StudentEnrollment.objects.create(student=cls.student2, school_class=cls.class1)
-        student1_greatness = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2)
+        student1_management = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class1, semester=date(2018, 1, 1))
+        student2_management = StudentEnrollment.objects.create(student=cls.student2, school_class=cls.class1, semester=date(2018, 1, 1))
+        student1_greatness = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2,  semester=date(2018, 1, 1))
+        student1_greatness2 = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2, semester=data(2018, 7, 1))
         #quizzes
         quiz1 = factories.create_quiz({ 'school_class': cls.class1, 'questions': create_questions(5) })
         quiz2 = factories.create_quiz({ 'school_class': cls.class1, 'questions': create_questions(5) })
         quiz3 = factories.create_quiz({ 'school_class': cls.class2, 'questions': create_questions(10)})
+        quiz4 = factories.create_quiz({ 'school_class': cls.class2, 'questions': create_questions(10) })
         #assignments
         Assignment.objects.create(quiz=quiz1, enrollment=student1_management, status=Assignment.COMPLETED, grade=4)
         Assignment.objects.create(quiz=quiz2, enrollment=student1_management, status=Assignment.COMPLETED, grade=5)
         Assignment.objects.create(quiz=quiz1, enrollment=student2_management, status=Assignment.COMPLETED, grade=3)
         Assignment.objects.create(quiz=quiz2, enrollment=student2_management, status=Assignment.COMPLETED, grade=3)
         Assignment.objects.create(quiz=quiz3, enrollment=student1_greatness, status=Assignment.COMPLETED, grade=9)
+        Assignment.objects.create(quiz=quiz4, enrollment=student1_greatness2, status=Assignment.COMPLETED, grade=10) #Not returned
 
     def setUp(self):
-        factory = factories.GradeByClassReport(self.teacher.id)
+        factory = factories.GradeByClassReport(self.teacher.id, date(2018, 7, 1))
         self.report = factory.generate()
 
     def test_generates_report_grouped_by_teacher_classes(self):                
