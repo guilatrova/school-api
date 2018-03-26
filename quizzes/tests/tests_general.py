@@ -139,3 +139,5 @@ class GradeFactoryServiceTestCase(TestCase):
         self.assertEqual(class1[self.student1.name], 9)
         self.assertEqual(class1[self.student2.name], 6)
         self.assertEqual(class2[self.student1.name], 9)
+
+    #TODO: SEMESTER

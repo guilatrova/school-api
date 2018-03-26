@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
+from unittest.mock import patch
 from django.urls import reverse
 from quizzes.models import Quiz, Question, Answer, Assignment, Submission
 from people.models import Teacher, Student
@@ -109,3 +110,13 @@ class SubmissionApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+class GradeReportApiTestCase(APITestCase):
+
+    @patch('quizzes.factories.GradeByClassReport.generate', return_value=[])
+    def test_api_returns_report_results(self, mock):
+        response = self.client.get(reverse('student-grades-report'), format='json')
+
+        self.assertTrue(mock.called)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
