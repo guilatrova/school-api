@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .serializers import QuizSerializer, AssignmentSerializer, SubmissionSerializer
 from .models import Quiz, Assignment, Submission
+from quizzes import factories
 
 class QuizViewSet(mixins.CreateModelMixin, 
                   mixins.ListModelMixin,
@@ -34,5 +36,6 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         serializer.save(assignment_id=self.kwargs['assignment_id'])
 
 @api_view()
-def get_grade_report(request):
-    pass
+def get_grade_report(request):    
+    data = factories.GradeByClassReport(None).generate()
+    return Response(data)
