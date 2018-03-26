@@ -129,3 +129,9 @@ class GradeReportApiTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         mock.assert_called_with('1')
+
+    def test_api_should_reject_calls_without_teacher_specified(self):
+        url = reverse('student-grades-report')
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
