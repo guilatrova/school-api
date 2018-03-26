@@ -20,6 +20,7 @@ I chose to go with a rest API due reusability and scaling.
     - [TDD approach](#tdd-approach)
     - [Refactoring](#refactoring)
     - [Mocking & Integration tests](#mocking--integration-tests)
+    - [Time Spent](#time-spent)
 - Code
     - [Modules](#modules)
     - [Models](#models)
@@ -82,6 +83,12 @@ It was only mocked things that felt like it should. Django provides a very helpf
 Some people calls it integration (since it handles database), but that's a ideological topic, at the end of the day you still have **fast** (some secs) **unit** (testing just a single part) **tests**.
 
 So, for this I'll consider as integration basically any API, signals, and some services tests
+
+# Time Spent
+
+Report provided by [WakaTime](https://wakatime.com/@ba838fdf-d2e1-4d46-bcef-b8a360dd281b/projects/lgkcdungfd?start=2018-03-20&end=2018-03-26).
+
+![![Time spent report](docs/wakatime_report.png)](https://wakatime.com/@ba838fdf-d2e1-4d46-bcef-b8a360dd281b/projects/lgkcdungfd?start=2018-03-20&end=2018-03-26)
 
 # Modules
 
