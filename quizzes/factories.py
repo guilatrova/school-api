@@ -17,8 +17,9 @@ def create_quiz(validated_data):
     return quiz
 
 class GradeByClassReport:
-    def __init__(self, teacher_id):
+    def __init__(self, teacher_id, semester):
         self.teacher_id = teacher_id
+        self.semester = semester
 
     def generate(self):
         data = self._get_data()

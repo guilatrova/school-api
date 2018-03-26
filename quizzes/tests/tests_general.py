@@ -106,7 +106,7 @@ class GradeFactoryServiceTestCase(TestCase):
         student1_management = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class1, semester=date(2018, 1, 1))
         student2_management = StudentEnrollment.objects.create(student=cls.student2, school_class=cls.class1, semester=date(2018, 1, 1))
         student1_greatness = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2,  semester=date(2018, 1, 1))
-        student1_greatness2 = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2, semester=data(2018, 7, 1))
+        student1_greatness2 = StudentEnrollment.objects.create(student=cls.student1, school_class=cls.class2, semester=date(2018, 7, 1))
         #quizzes
         quiz1 = factories.create_quiz({ 'school_class': cls.class1, 'questions': create_questions(5) })
         quiz2 = factories.create_quiz({ 'school_class': cls.class1, 'questions': create_questions(5) })

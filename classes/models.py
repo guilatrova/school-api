@@ -7,3 +7,4 @@ class SchoolClass(models.Model):
 class StudentEnrollment(models.Model):
     student = models.ForeignKey('people.Student', on_delete=models.PROTECT)
     school_class = models.ForeignKey('SchoolClass', on_delete=models.PROTECT)
+    semester = models.DateField()

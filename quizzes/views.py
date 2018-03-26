@@ -41,5 +41,5 @@ def get_grade_report(request):
     if (teacher is None):
         raise exceptions.MissingParams()
 
-    data = factories.GradeByClassReport(teacher).generate()
+    data = factories.GradeByClassReport(teacher, None).generate()
     return Response(data)

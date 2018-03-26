@@ -1,3 +1,4 @@
+from datetime import date
 from django.test import TestCase
 from django.urls import reverse, resolve
 from rest_framework import status
@@ -31,7 +32,7 @@ class StudentEnrollmentSerializerTestCase(SetupTeacherDataMixin, TestCase):
         cls.student = Student.objects.create(name='Jhon Doe')
 
     def test_serializer_validates(self):
-        data = { 'school_class': self.school_class.id, 'student': self.student.id }
+        data = { 'school_class': self.school_class.id, 'student': self.student.id, 'semester': date(2018, 1, 1) }
         serializer = serializers.StudentEnrollmentSerializer(data=data)
         self.assertTrue(serializer.is_valid())
 
@@ -61,7 +62,7 @@ class StudentClassesApiIntegrationTestCase(SetupTeacherDataMixin, APITestCase):
         super().setUpTestData()
         cls.school_class = SchoolClass.objects.create(name='class', teacher=cls.teacher)
         cls.student = Student.objects.create(name='Jhon Doe')
-        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
+        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class, semester=date(2018, 1, 1))
         
         other_student = Student.objects.create(name='Mary Doe') #To make sure it only lists current student classes
         enrollment = StudentEnrollment(student=other_student, school_class=cls.school_class)
@@ -70,7 +71,7 @@ class StudentClassesApiIntegrationTestCase(SetupTeacherDataMixin, APITestCase):
         self.url = reverse('student-classes', kwargs={'student_id': self.student.id})
 
     def test_creates_enrollment(self):
-        data = { 'student': self.student.id, 'school_class': self.school_class.id }
+        data = { 'student': self.student.id, 'school_class': self.school_class.id, 'semester': '2018-01-01' }
 
         response = self.client.post(self.url, data, format='json')
 

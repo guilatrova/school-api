@@ -1,3 +1,4 @@
+from datetime import date
 from rest_framework.test import APITestCase
 from rest_framework import status
 from unittest.mock import patch, MagicMock
@@ -44,7 +45,7 @@ class StudentAssignmentApiIntegrationTestCase(SetupAssignmentDataMixin, APITestC
     def setUpTestData(cls):
         super().setUpTestData()
         other_student = Student.objects.create(name='Mary Doe') #Make sure only student's assignments are handled
-        other_enrollment = StudentEnrollment.objects.create(student=other_student, school_class=cls.school_class)
+        other_enrollment = StudentEnrollment.objects.create(student=other_student, school_class=cls.school_class, semester=date(2018, 1, 1))
         Assignment.objects.create(quiz=cls.quiz, enrollment=other_enrollment)
 
     def test_api_creates_assignment(self):

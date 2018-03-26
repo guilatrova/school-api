@@ -1,3 +1,4 @@
+from datetime import date
 from people.models import Teacher, Student
 from classes.models import SchoolClass, StudentEnrollment
 from quizzes.models import Assignment
@@ -20,7 +21,7 @@ class SetupStudentEnrollmentDataMixin:
     def setUpTestData(cls):
         super().setUpTestData()
         cls.student = Student.objects.create(name='Jhon Doe')
-        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class)
+        cls.enrollment = StudentEnrollment.objects.create(student=cls.student, school_class=cls.school_class, semester=date(2018, 1, 1))
 
 class SetupAssignmentDataMixin(SetupStudentEnrollmentDataMixin, SetupQuizDataMixin):
     @classmethod
