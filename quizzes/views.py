@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.exceptions import APIException
 from .serializers import QuizSerializer, AssignmentSerializer, SubmissionSerializer
 from .models import Quiz, Assignment, Submission
 from quizzes import factories
@@ -38,5 +39,13 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 @api_view()
 def get_grade_report(request):
     teacher = request.GET.get('teacher')
+    if (teacher is None):
+        raise MissingParams()
+
     data = factories.GradeByClassReport(teacher).generate()
     return Response(data)
+
+class MissingParams(APIException):
+    status_code = 422
+    default_detail = 'There are missing required query params to handle request.'
+    default_code = 'missing_params'
