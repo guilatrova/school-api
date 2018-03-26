@@ -16,7 +16,7 @@ I chose to go with a rest API due reusability and scaling.
 - Specifications
     - [Assumptions](#assumptions)
     - [Extended Assumptions](#extended-assumptions-for-our-api)
-- Techniques
+- Techniques & Development
     - [TDD approach](#tdd-approach)
     - [Refactoring](#refactoring)
     - [Mocking & Integration tests](#mocking--integration-tests)
@@ -41,7 +41,7 @@ I chose to go with a rest API due reusability and scaling.
 
 - We can manage (add, delete, update, retrieve, list) teachers and students
 - Quizzes can have as much questions as desired
-- All questions should have exactly 4 options
+- All questions should have exactly 4 possible answers
 - Questions can repeat
 - Answers can't be duplicated (whether by choice or description)
 - API will only exposes endpoint to quizzes - questions and choices should be handled through it (like [DDD's aggregate root](https://stackoverflow.com/questions/1958621/whats-an-aggregate-root))
@@ -52,7 +52,7 @@ I chose to go with a rest API due reusability and scaling.
 
 # TDD approach
 
-If we get code now, you will notice lots of mixins, and beautiful code. But if you check commit history from start and keep going until end, then you'll note gently changes over time - transforming bad WET code into neat code.
+If we get the code now, you will notice lots of mixins and neat code. But if you check commit history from start and keep going until end, then you'll note gently changes over time - **transforming bad WET code into neat code**.
 
 From migrations to services and handlers, they were only added when requested for the task. So we avoided over-engineering and sticked to deliver the most simple and attending software as fast as possible (done in 2 days of work).
 
@@ -61,7 +61,7 @@ Basically we followed a recipe:
 - Add failing tests for URLs (how api will handle it)
 - Implement it
 - Add failing tests for Serializer (how data should be handled)
-- Implement it (Migrations were added here)
+- Implement it (Migrations were usually added here)
 - Add failing integration tests for API (how api should behave when requests are made)
 - Refactor it
 
@@ -73,13 +73,13 @@ Things like:
 - Remove duplicated code ([DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself))
 - Move functions/classes to where they should belong ([Single Responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle))
 - Make code simpler ([KISS principle](https://en.wikipedia.org/wiki/KISS_principle))
-- Others
+- More
 
 # Mocking & Integration tests
 
 It was only mocked things that felt like it should. Django provides a very helpful testing database, so if we can generate great software with amazing tests using it, why not? 
 
-Some people calls it integration (since it handle database), but that's a ideological topic, at the end of the day you still have **fast** (some secs) **unit** (testing just a single part) **tests**.
+Some people calls it integration (since it handles database), but that's a ideological topic, at the end of the day you still have **fast** (some secs) **unit** (testing just a single part) **tests**.
 
 So, for this I'll consider as integration basically any API, signals, and some services tests
 
@@ -90,7 +90,7 @@ We basically have 3 modules (or django apps).
 | Module | Description |
 |---|---|
 | People | Manages Student and Teacher 
-| Classes | Manages classes like which student is coursing which class, and which teacher teaches which class
+| Classes | Manages classes like which student is taking which class, and which teacher teaches which class
 | Quizzes | Manages quizzes, assignments and grades
 
 
@@ -103,13 +103,13 @@ We basically have 3 modules (or django apps).
 | Endpoint | Resource | Description | Allows |
 | --- | --- | --- | --- |
 | `students/` | Student | Lists or creates students | *GET, POST*
-| `students/:id` | Student | Retrieve, update or delete specified student | *GET, PUT, DELETE*
+| `students/:id` | Student | Retrieves, updates or deletes specified student | *GET, PUT, DELETE*
 | `students/:id/classes` | StudentEnrollment | Lists or creates student's classes | *GET, POST*
-| `students/:id/assignments` | Assignment | Lists or creates student's assingments | *GET, POST*
+| `students/:id/assignments` | Assignment | Lists or creates student's assignments | *GET, POST*
 | `teachers/` | Teacher | Lists or creates teachers | *GET, POST*
-| `teachers/:id` | Teacher | Retrieve, update or delete specified teacher | *GET, PUT, DELETE*
+| `teachers/:id` | Teacher | Retrieves, updates or deletes specified teacher | *GET, PUT, DELETE*
 | `classes/` | SchoolClass | Lists or creates classes | *GET, POST*
-| `classes/:id` | SchoolClass | Retrieve, update or delete specified class | *GET, PUT, DELETE*
+| `classes/:id` | SchoolClass | Retrieves, updates or deletes specified class | *GET, PUT, DELETE*
 | `quizzes/` | Quiz | Lists or creates quizzes | *GET, POST*
 | `quizzes/:id` | Quiz | Retrieves specified quiz | *GET*
 | `assignments/` | Assignment | Lists assignments | *GET*
