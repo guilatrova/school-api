@@ -1,4 +1,5 @@
 from datetime import date
+from unittest.mock import patch
 from django.test import TestCase
 from quizzes import views, serializers, factories, services
 from quizzes.models import Quiz, Question, Answer, Assignment, Submission
@@ -46,6 +47,14 @@ class FactoriesTestCase(SetupSchoolClassDataMixin, TestCase):
         self.assertEqual(Answer.objects.count(), 4 * 3)
         self.assertEqual(Question.objects.count(), 3)
         self.assertEqual(Quiz.objects.count(), 1)
+
+class SignalsIntegrationTestCase(SetupAssignmentDataMixin, TestCase):
+    @patch('quizzes.services.GradeService.check')
+    def test_creating_a_submission_calls_grade_service(self, mock):
+        question = self.quiz.questions.first()
+        submission = Submission.objects.create(assignment=self.assignment, question=question, answer=1)
+
+        mock.assert_called_with(self.assignment)
 
 class GradeServiceTestCase(SetupAssignmentDataMixin, TestCase):
     def setUp(self):

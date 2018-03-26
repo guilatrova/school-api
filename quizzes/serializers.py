@@ -65,8 +65,3 @@ class SubmissionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Can't submit same question")
 
         return question
-
-    def create(self, validated_data):
-        result = super().create(validated_data)
-        GradeService().check(Assignment.objects.get(pk=validated_data['assignment_id'])) #TODO: Refactor this
-        return result

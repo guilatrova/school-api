@@ -119,12 +119,3 @@ class SubmissionSerializerTestCase(SetupAssignmentDataMixin, TestCase):
         serializer = serializers.SubmissionSerializer(data=data, context=self.context)
         self.assertFalse(serializer.is_valid())
         self.assertIn('question', serializer.errors)
-
-    @patch('quizzes.services.GradeService.check')
-    def test_serializer_creates_calls_grade_service(self, mock):
-        data = { 'question': self.quiz.questions.first().id, 'answer': 1 }
-        serializer = serializers.SubmissionSerializer(data=data, context=self.context)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(assignment_id=self.assignment.id)
-
-        mock.assert_called_with(self.assignment)
