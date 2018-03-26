@@ -1,5 +1,5 @@
 # TDD with Django Rest Framework
-![Build](https://travis-ci.org/guilatrova/school-api.svg?branch=master)
+[![Build](https://travis-ci.org/guilatrova/school-api.svg?branch=master)](https://travis-ci.org/guilatrova/school-api)
 [![Coverage Status](https://coveralls.io/repos/github/guilatrova/school-api/badge.svg?branch=master)](https://coveralls.io/github/guilatrova/school-api?branch=master)
 
 Example showing the right way to test a rest API with unit and integration tests. 
