@@ -121,7 +121,7 @@ class GradeFactoryServiceTestCase(TestCase):
         Assignment.objects.create(quiz=quiz4, enrollment=student1_greatness2, status=Assignment.COMPLETED, grade=10) #Not returned
 
     def setUp(self):
-        factory = factories.GradeByClassReport(self.teacher.id, date(2018, 7, 1))
+        factory = factories.GradeByClassReport(self.teacher.id, date(2018, 1, 1))
         self.report = factory.generate()
 
     def test_generates_report_grouped_by_teacher_classes(self):                
@@ -143,5 +143,3 @@ class GradeFactoryServiceTestCase(TestCase):
         self.assertEqual(class1[self.student1.name], 9)
         self.assertEqual(class1[self.student2.name], 6)
         self.assertEqual(class2[self.student1.name], 9)
-
-    #TODO: SEMESTER

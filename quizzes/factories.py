@@ -32,8 +32,10 @@ class GradeByClassReport:
                     .annotate(
                         class_name=F('studentenrollment__school_class__name'),
                         student_name=F('studentenrollment__student__name'),
-                        grade=Sum('studentenrollment__assignment__grade')
+                        grade=Sum('studentenrollment__assignment__grade'),
+                        semester=F('studentenrollment__semester')
                     )\
+                    .filter(semester=self.semester)\
                     .order_by('class_name')
 
     def _prep_data(self, data):
