@@ -88,7 +88,7 @@ So, for this I'll consider as integration basically any API, signals, and some s
 
 Report provided by [WakaTime](https://wakatime.com/@ba838fdf-d2e1-4d46-bcef-b8a360dd281b/projects/lgkcdungfd?start=2018-03-20&end=2018-03-26).
 
-![![Time spent report](docs/wakatime_report.png)](https://wakatime.com/@ba838fdf-d2e1-4d46-bcef-b8a360dd281b/projects/lgkcdungfd?start=2018-03-20&end=2018-03-26)
+![Time spent report](docs/wakatime_report.png)
 
 # Modules
 
