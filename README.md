@@ -1,5 +1,6 @@
 # TDD with Django Rest Framework
 ![Build](https://travis-ci.org/guilatrova/school-api.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/guilatrova/school-api/badge.svg?branch=master)](https://coveralls.io/github/guilatrova/school-api?branch=master)
 
 Example showing the right way to test a rest API with unit and integration tests. 
 We're not using selenium for E2E tests because we should extend this application with a front end to do so.
