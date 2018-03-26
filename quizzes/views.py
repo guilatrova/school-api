@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import api_view
@@ -38,8 +39,11 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 @api_view()
 def get_grade_report(request):
     teacher = request.GET.get('teacher')
-    if (teacher is None):
+    semester = request.GET.get('semester')
+    if teacher is None or semester is None:
         raise exceptions.MissingParams()
 
-    data = factories.GradeByClassReport(teacher, None).generate()
+    semester = datetime.strptime(semester, '%Y-%M-%d').date()
+
+    data = factories.GradeByClassReport(teacher, semester).generate()
     return Response(data)

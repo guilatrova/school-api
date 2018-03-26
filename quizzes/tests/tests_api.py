@@ -113,11 +113,12 @@ class SubmissionApiIntegrationTestCase(SetupAssignmentDataMixin, APITestCase):
         self.assertEqual(len(response.data), 1)
 
 class GradeReportApiTestCase(APITestCase):
+    def setUp(self):
+        self.url = url = reverse('student-grades-report') + "?teacher=1&semester=2018-01-01"
 
     @patch('quizzes.factories.GradeByClassReport.generate', return_value=[])
-    def test_api_returns_report_results(self, mock):
-        url = reverse('student-grades-report') + "?teacher=1"
-        response = self.client.get(url, format='json')
+    def test_api_returns_report_results(self, mock):        
+        response = self.client.get(self.url, format='json')
 
         self.assertTrue(mock.called)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -125,14 +126,19 @@ class GradeReportApiTestCase(APITestCase):
 
     @patch('quizzes.factories.GradeByClassReport', return_value=MagicMock(generate=lambda : []))
     def test_api_pass_data_to_report(self, mock):
-        url = reverse('student-grades-report') + "?teacher=1"
-        response = self.client.get(url, format='json')
+        response = self.client.get(self.url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        mock.assert_called_with('1')
+        mock.assert_called_with('1', date(2018, 1, 1))
 
     def test_api_should_reject_calls_without_teacher_specified(self):
-        url = reverse('student-grades-report')
+        url = reverse('student-grades-report') + "?semester=2018-01-01"
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def test_api_should_reject_calls_without_semester_specified(self):
+        url = reverse('student-grades-report') + "?teacher=1"
         response = self.client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
